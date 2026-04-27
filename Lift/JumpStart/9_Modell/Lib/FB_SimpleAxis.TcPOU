@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_SimpleAxis" Id="{1bec4075-a3cd-427b-958e-2da1fcda15f3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_SimpleAxis
+(*
+		Sensor 1					  Sensor 2
+	  		|							|
+	Left ----------------------------------- Right
+
+
+*)
+VAR_INPUT
+	MotorOpen			: BOOL; // Motor turns right
+	MotorClose			: BOOL; // Motor turns left
+	Axis_Len			: REAL := 100; // Axis length [mm]
+	SensorOpenOffset	: REAL := 6; // Sensor offset from left to sensor 1 position
+	SensorCloseOffset	: REAL := 6; // Sensor offset from right to sensor 2 position
+	StartPosition 		: REAL := Axis_Len / 2; // Start position axis
+END_VAR
+VAR_OUTPUT
+	SensorOpenActive	: BOOL; // Sensor left is active
+	SensorCloseActive	: BOOL; // Sensor right is active
+	Position			: REAL := StartPosition; // Current axis position
+END_VAR
+VAR
+	Step				: INT := 1; // Speed step
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF MotorOpen AND MotorClose THEN
+	;
+ELSIF MotorOpen THEN
+	Position := Position + Step;
+ELSIF MotorClose THEN
+	Position := Position - Step;
+END_IF
+
+IF Position >= Axis_Len THEN
+	Position := Axis_Len;
+ELSIF Position <= 0 THEN
+	Position := 0;
+END_IF
+
+SensorCloseActive := Position <= SensorCloseOffset;
+SensorOpenActive := Position >= Axis_len - SensorOpenOffset;
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

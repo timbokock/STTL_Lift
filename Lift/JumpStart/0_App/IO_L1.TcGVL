@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="IO_L1" Id="{a8d7390b-068e-40d9-8df5-8d1aff7e7470}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	LiftAxis					: AXIS_REF;
+	
+	Door_1_SensorOpen			AT %I*	: BOOL;	// Door level 1 open
+	Door_1_SensorClosed  		AT %I*	: BOOL; // Door level 1 closed
+	Door_1_SensorActive			AT %I*	: BOOL; // Door level 1 sensor active
+	Door_1_MotorOpen			AT %Q* 	: BOOL; // Motor level 1 - Open
+	Door_1_MotorClose			AT %Q* 	: BOOL; // Motor level 1 - Close
+	
+	Panel_1_Btn					AT %I*  : ARRAY[1..6] OF BOOL; // Panel Level 1 - Buttons
+	Panel_1_BtnLed				AT %Q*  : ARRAY[1..6] OF BOOL; // Panel Level 1 - Button LEDs
+	Panel_1_Led_Up				AT %Q*  : BOOL; // Panel Level 1 - Led Up
+	Panel_1_Led_Down			AT %Q*  : BOOL; // Panel Level 1 - Led Down
+	Panel_1_BCD_Bit				AT %Q* 	: ARRAY[0..3] OF BOOL; // Panel Level 1- BCD Bit 0..3
+	
+	Door_2_SensorOpen			AT %I*	: BOOL;	// Door level 2 open
+	Door_2_SensorClosed  		AT %I*	: BOOL; // Door level 2 closed
+	Door_2_SensorActive			AT %I*	: BOOL; // Door level 2 sensor active
+	Door_2_MotorOpen			AT %Q* 	: BOOL; // Motor level 2 - Open
+	Door_2_MotorClose			AT %Q* 	: BOOL; // Motor level 2 - Close
+	
+	Panel_2_Btn					AT %I*  : ARRAY[1..6] OF BOOL; // Panel Level 2 - Buttons
+	Panel_2_BtnLed				AT %Q*  : ARRAY[1..6] OF BOOL; // Panel Level 2 - Button LEDs
+	Panel_2_Led_Up				AT %Q*  : BOOL; // Panel Level 2 - Led Up
+	Panel_2_Led_Down			AT %Q*  : BOOL; // Panel Level 2 - Led Down
+	Panel_2_BCD_Bit				AT %Q* 	: ARRAY[0..3] OF BOOL; // Panel Level 2- BCD Bit 0..3
+	
+	Door_3_SensorOpen			AT %I*	: BOOL;	// Door level 3 open
+	Door_3_SensorClosed  		AT %I*	: BOOL; // Door level 3 closed
+	Door_3_SensorActive			AT %I*	: BOOL; // Door level 3 sensor active
+	Door_3_MotorOpen			AT %Q* 	: BOOL; // Motor level 3 - Open
+	Door_3_MotorClose			AT %Q* 	: BOOL; // Motor level 3 - Close
+	
+	Panel_3_Btn					AT %I*  : ARRAY[1..6] OF BOOL; // Panel Level 3 - Buttons
+	Panel_3_BtnLed				AT %Q*  : ARRAY[1..6] OF BOOL; // Panel Level 3 - Button LEDs
+	Panel_3_Led_Up				AT %Q*  : BOOL; // Panel Level 3 - Led Up
+	Panel_3_Led_Down			AT %Q*  : BOOL; // Panel Level 3 - Led Down
+	Panel_3_BCD_Bit				AT %Q* 	: ARRAY[0..3] OF BOOL; // Panel Level 3- BCD Bit 0..3
+	
+	
+	Door_4_SensorOpen			AT %I*	: BOOL;	// Door level 4 open
+	Door_4_SensorClosed  		AT %I*	: BOOL; // Door level 4 closed
+	Door_4_SensorActive			AT %I*	: BOOL; // Door level 4 sensor active
+	Door_4_MotorOpen			AT %Q* 	: BOOL; // Motor level 4 - Open
+	Door_4_MotorClose			AT %Q* 	: BOOL; // Motor level 4 - Close
+	
+	Panel_4_Btn					AT %I*  : ARRAY[1..6] OF BOOL; // Panel Level 4 - Buttons
+	Panel_4_BtnLed				AT %Q*  : ARRAY[1..6] OF BOOL; // Panel Level 4 - Button LEDs
+	Panel_4_Led_Up				AT %Q*  : BOOL; // Panel Level 4 - Led Up
+	Panel_4_Led_Down			AT %Q*  : BOOL; // Panel Level 4 - Led Down
+	Panel_4_BCD_Bit				AT %Q* 	: ARRAY[0..3] OF BOOL; // Panel Level 4- BCD Bit 0..3
+	
+	
+	Door_5_SensorOpen			AT %I*	: BOOL;	// Door level 5 open
+	Door_5_SensorClosed  		AT %I*	: BOOL; // Door level 5 closed
+	Door_5_SensorActive			AT %I*	: BOOL; // Door level 5 sensor active
+	Door_5_MotorOpen			AT %Q* 	: BOOL; // Motor level 5 - Open
+	Door_5_MotorClose			AT %Q* 	: BOOL; // Motor level 5 - Close
+	
+	Panel_5_Btn					AT %I*  : ARRAY[1..6] OF BOOL; // Panel Level 5 - Buttons
+	Panel_5_BtnLed				AT %Q*  : ARRAY[1..6] OF BOOL; // Panel Level 5 - Button LEDs
+	Panel_5_Led_Up				AT %Q*  : BOOL; // Panel Level 5 - Led Up
+	Panel_5_Led_Down			AT %Q*  : BOOL; // Panel Level 5 - Led Down
+	Panel_5_BCD_Bit				AT %Q* 	: ARRAY[0..3] OF BOOL; // Panel Level 5- BCD Bit 0..3
+	
+	
+	Door_6_SensorOpen			AT %I*	: BOOL;	// Door level 6 open
+	Door_6_SensorClosed  		AT %I*	: BOOL; // Door level 6 closed
+	Door_6_SensorActive			AT %I*	: BOOL; // Door level 6 sensor active
+	Door_6_MotorOpen			AT %Q* 	: BOOL; // Motor level 6 - Open
+	Door_6_MotorClose			AT %Q* 	: BOOL; // Motor level 6 - Close
+
+	Panel_6_Btn					AT %I*  : ARRAY[1..6] OF BOOL; // Panel Level 6 - Buttons
+	Panel_6_BtnLed				AT %Q*  : ARRAY[1..6] OF BOOL; // Panel Level 6 - Button LEDs
+	Panel_6_Led_Up				AT %Q*  : BOOL; // Panel Level 6 - Led Up
+	Panel_6_Led_Down			AT %Q*  : BOOL; // Panel Level 6 - Led Down
+	Panel_6_BCD_Bit				AT %Q* 	: ARRAY[0..3] OF BOOL; // Panel Level 6- BCD Bit 0..3
+	
+	
+
+	Control_Manual					AT %I*	: BOOL; // Mode: Manual
+	Control_Automatic				AT %I*	: BOOL; // Mode: Automatic
+	Control_Reset					AT %I*	: BOOL; // Reset
+	Control_Start					AT %I*	: BOOL; // Start
+	Control_EmergencyStopActive 	AT %I*	: BOOL; // Emergency stop active
+	Control_Overload				AT %I*	: BOOL; // Lift overload
+	Control_LiftAxisReference		AT %I*  : BOOL; // Lift reference sensor bottom
+	Control_Firealarm				AT %I*  : BOOL; // Fire alarm signal
+	
+	Control_LED_Yellow				AT %Q*	: BOOL; // LED Yellow 
+	Control_LED_Red					AT %Q*	: BOOL; // LED Red 
+	Control_LED_Blue				AT %Q*	: BOOL; // LED Blue 
+	Control_LED_White				AT %Q*	: BOOL; // LED White 
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

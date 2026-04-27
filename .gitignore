@@ -1,0 +1,41 @@
+############################
+# Visual Studio
+############################
+.vs/
+*.user
+*.suo
+*.dbmdl
+*.jfm
+
+############################
+# Build Output
+############################
+bin/
+obj/
+
+############################
+# TwinCAT Generated Files
+############################
+*.tpy
+*.tmc
+*.compiled-library
+*.compileinfo
+*.bootdata*
+
+############################
+# TwinCAT Folders
+############################
+Boot/
+_TwinCAT/
+_CompileInfo/
+
+############################
+# Backup / Temp
+############################
+*.bak
+*.tsproj.bak
+*.xti.bak
+*~
+*.log
+*.tmp
+*.zip

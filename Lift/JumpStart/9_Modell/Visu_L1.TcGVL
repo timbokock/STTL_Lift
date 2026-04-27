@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="Visu_L1" Id="{34ce8bae-9a56-4709-8a6c-7d8a98250e33}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	Position_LIFT	: LREAL; // 0-100
+	Door_1_Position	: REAL;
+	Door_1_M_Open	: BOOL;
+	Door_1_M_Close	: BOOL;
+	Door_2_Position	: REAL;
+	
+	Door_2_M_Open	: BOOL;
+	Door_2_M_Close	: BOOL;
+	Door_3_Position	: REAL;
+	
+	Door_3_M_Open	: BOOL;
+	Door_3_M_Close	: BOOL;
+	Door_4_Position	: REAL;
+	
+	Door_4_M_Open	: BOOL;
+	Door_4_M_Close	: BOOL;
+	Door_5_Position	: REAL;
+	
+	Door_5_M_Open	: BOOL;
+	Door_5_M_Close	: BOOL;
+	Door_6_Position	: REAL;
+	
+	Door_6_M_Open	: BOOL;
+	Door_6_M_Close	: BOOL;
+	Color : DWORD := 16#FFFFA500;	
+
+	Door_1_SensorOpen				: BOOL;	// Door level 1 open
+	Door_1_SensorClosed  			: BOOL; // Door level 1 closed
+	Door_1_SensorActive				: BOOL := TRUE; // Door level 1 sensor active
+	Door_1_MotorOpen			 	: BOOL; // Motor level 1 - Open
+	Door_1_MotorClose			 	: BOOL; // Motor level 1 - Close
+	
+	Panel_1_Btn					  : ARRAY[1..6] OF BOOL; // Panel Level 1 - Buttons
+	Panel_1_BtnLed				  : ARRAY[1..6] OF BOOL; // Panel Level 1 - Button LEDs
+	Panel_1_Led_Up				  : BOOL; // Panel Level 1 - Led Up
+	Panel_1_Led_Down			  : BOOL; // Panel Level 1 - Led Down
+	Panel_1_FloorNumber			 	: INT; // Panel Level 1 - Floor Number
+	
+	Door_2_SensorOpen				: BOOL;	// Door level 2 open
+	Door_2_SensorClosed  			: BOOL; // Door level 2 closed
+	Door_2_SensorActive				: BOOL := TRUE; // Door level 2 sensor active
+	Door_2_MotorOpen			 	: BOOL; // Motor level 2 - Open
+	Door_2_MotorClose			 	: BOOL; // Motor level 2 - Close
+	
+	Panel_2_Btn					  : ARRAY[1..6] OF BOOL; // Panel Level 2 - Buttons
+	Panel_2_BtnLed				  : ARRAY[1..6] OF BOOL; // Panel Level 2 - Button LEDs
+	Panel_2_Led_Up				  : BOOL; // Panel Level 2 - Led Up
+	Panel_2_Led_Down			  : BOOL; // Panel Level 2 - Led Down
+	Panel_2_FloorNumber			 	: INT; // Panel Level 2 - Floor Number
+	
+	Door_3_SensorOpen				: BOOL;	// Door level 3 open
+	Door_3_SensorClosed  			: BOOL; // Door level 3 closed
+	Door_3_SensorActive				: BOOL := TRUE; // Door level 3 sensor active
+	Door_3_MotorOpen			 	: BOOL; // Motor level 3 - Open
+	Door_3_MotorClose			 	: BOOL; // Motor level 3 - Close
+	
+	Panel_3_Btn					  : ARRAY[1..6] OF BOOL; // Panel Level 3 - Buttons
+	Panel_3_BtnLed				  : ARRAY[1..6] OF BOOL; // Panel Level 3 - Button LEDs
+	Panel_3_Led_Up				  : BOOL; // Panel Level 3 - Led Up
+	Panel_3_Led_Down			  : BOOL; // Panel Level 3 - Led Down
+	Panel_3_FloorNumber			 	: INT; // Panel Level 3 - Floor Number
+	
+	Door_4_SensorOpen				: BOOL;	// Door level 4 open
+	Door_4_SensorClosed  			: BOOL; // Door level 4 closed
+	Door_4_SensorActive				: BOOL := TRUE; // Door level 4 sensor active
+	Door_4_MotorOpen			 	: BOOL; // Motor level 4 - Open
+	Door_4_MotorClose			 	: BOOL; // Motor level 4 - Close
+	
+	Panel_4_Btn					  : ARRAY[1..6] OF BOOL; // Panel Level 4 - Buttons
+	Panel_4_BtnLed				  : ARRAY[1..6] OF BOOL; // Panel Level 4 - Button LEDs
+	Panel_4_Led_Up				  : BOOL; // Panel Level 4 - Led Up
+	Panel_4_Led_Down			  : BOOL; // Panel Level 4 - Led Down
+	Panel_4_FloorNumber			 	: INT; // Panel Level 4 - Floor Number
+	
+	Door_5_SensorOpen				: BOOL;	// Door level 5 open
+	Door_5_SensorClosed  			: BOOL; // Door level 5 closed
+	Door_5_SensorActive				: BOOL := TRUE; // Door level 5 sensor active
+	Door_5_MotorOpen			 	: BOOL; // Motor level 5 - Open
+	Door_5_MotorClose			 	: BOOL; // Motor level 5 - Close
+	
+	Panel_5_Btn					  : ARRAY[1..6] OF BOOL; // Panel Level 5 - Buttons
+	Panel_5_BtnLed				  : ARRAY[1..6] OF BOOL; // Panel Level 5 - Button LEDs
+	Panel_5_Led_Up				  : BOOL; // Panel Level 5 - Led Up
+	Panel_5_Led_Down			  : BOOL; // Panel Level 5 - Led Down
+	Panel_5_FloorNumber			 	: INT; // Panel Level 5 - Floor Number
+	
+	Door_6_SensorOpen				: BOOL;	// Door level 6 open
+	Door_6_SensorClosed  			: BOOL; // Door level 6 closed
+	Door_6_SensorActive				: BOOL := TRUE; // Door level 6 sensor active
+	Door_6_MotorOpen			 	: BOOL; // Motor level 6 - Open
+	Door_6_MotorClose			 	: BOOL; // Motor level 6 - Close
+
+	Panel_6_Btn					  : ARRAY[1..6] OF BOOL; // Panel Level 6 - Buttons
+	Panel_6_BtnLed				  : ARRAY[1..6] OF BOOL; // Panel Level 6 - Button LEDs
+	Panel_6_Led_Up				  : BOOL; // Panel Level 6 - Led Up
+	Panel_6_Led_Down			  : BOOL; // Panel Level 6 - Led Down
+	Panel_6_FloorNumber			 	: INT; // Panel Level 6 - Floor Number
+	
+	Control_State						: INT;
+	Control_Reset						: BOOL; // Reset
+	Control_Start						: BOOL; // Start
+	Control_EmergencyStopActive 		: BOOL; // Emergency stop active
+	Control_Overload					: BOOL; // Lift overload
+	Control_LiftAxisReference		  : BOOL; // Lift reference sensor bottom
+	Control_Firealarm				  : BOOL; // Fire alarm signal
+	
+	Control_LED_Yellow					: BOOL; // LED Yellow 
+	Control_LED_Red						: BOOL; // LED Red 
+	Control_LED_Blue					: BOOL; // LED Blue 
+	Control_LED_White					: BOOL; // LED White 
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

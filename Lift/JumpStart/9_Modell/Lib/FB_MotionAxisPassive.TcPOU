@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionAxisPassive" Id="{c0b23c2a-8f01-4942-a8ad-b3cf5d617dd1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionAxisPassive
+VAR_IN_OUT
+	Axis : AXIS_REF;
+END_VAR
+VAR_INPUT
+	RandomStart :BOOL := TRUE;
+	Length : REAL := 1460.0;
+	RefSensorPositionAbs : LREAL := 45;
+	Window : LREAL := 5;
+END_VAR
+VAR_OUTPUT
+	PositionInPercent : LREAL;
+	CurrentPosition	: LREAL := Length / 2;
+	RefSensor : BOOL;
+	
+END_VAR
+VAR
+	fbReadPosition : MC_ReadActualPosition;
+	fbReadVelocity : MC_ReadActualVelocity;
+	fbSetPosition : MC_SetPosition;
+	fbReadStatus	: MC_ReadStatus;
+	
+	Random : DRAND;
+	Initialize : BOOL := TRUE;
+	SpeedStep : LREAL;
+	RelStartPos : LREAL;
+	LastPosition : LREAL;
+	DeltaPosition: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+fbReadStatus(
+	Axis:= Axis, 
+	Enable:= TRUE);
+
+IF Initialize THEN
+	;
+	Initialize := FALSE;
+END_IF
+
+fbSetPosition(
+	Axis:= Axis, 
+	Execute:= fbReadStatus.Valid, 
+	Position:= 0);
+
+IF fbReadStatus.Valid AND NOT fbSetPosition.Busy THEN		
+	fbReadPosition(
+		Axis:= Axis, 
+		Enable:= TRUE);
+		
+	fbReadVelocity(
+		Axis:= Axis, 
+		Enable:= TRUE);
+		
+	DeltaPosition := fbReadPosition.Position - LastPosition;
+	
+	SpeedStep := F_SpeedPerCycle(fbReadVelocity.ActualVelocity);
+	
+	IF ABS(DeltaPosition) > 2 * ABS(SpeedStep) THEN
+		DeltaPosition := 0;
+	END_IF
+	
+	LastPosition := fbReadPosition.Position;	
+	CurrentPosition := CurrentPosition + DeltaPosition;
+END_IF
+
+RefSensor :=  ((CurrentPosition > (RefSensorPositionAbs - Window)) AND (CurrentPosition < (RefSensorPositionAbs + Window)));
+
+PositionInPercent := (100 * CurrentPosition) / LENGTH;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

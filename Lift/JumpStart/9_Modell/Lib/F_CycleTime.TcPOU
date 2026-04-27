@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="F_CycleTime" Id="{58c57735-4ca5-49aa-993a-6115c8444a6a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_CycleTime : UDINT // Returns current cycle time in [ms]
+VAR_INPUT
+END_VAR
+VAR
+	fbGetCurTaskIdx  : GETCURTASKINDEX;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbGetCurTaskIdx();
+F_CycleTime := _TaskInfo[fbGetCurTaskIdx.index].CycleTime / 10000;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

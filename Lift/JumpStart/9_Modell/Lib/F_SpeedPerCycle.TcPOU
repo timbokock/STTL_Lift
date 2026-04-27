@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="F_SpeedPerCycle" Id="{03aaff63-c804-44b1-afc1-4387f5b31fec}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_SpeedPerCycle : LREAL // Returns speed step per cycle [speed / cycle]
+VAR_INPUT
+	Speed : LREAL; // Speed in mm / s
+END_VAR
+VAR
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+F_SpeedPerCycle := Speed * UDINT_TO_LREAL(F_CycleTime()) / 1000.0;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

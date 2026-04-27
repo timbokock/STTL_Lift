@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="IO_PLC" Id="{d2f65eac-ad92-41eb-ad1f-127351d08df8}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	T1				AT %I*	: BOOL; 
+	T2				AT %I*	: BOOL; 
+	P				AT %I*	: INT; 	
+	LED_Green 		AT %Q* : BOOL;
+	LED_Yellow 		AT %Q* : BOOL;
+	LED_Red 		AT %Q* : BOOL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{64cc9234-739d-43ff-b35d-7e9cae01cb71}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	fbPower : MC_Power;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*
+	Main Template
+	-------------
+	
+	This Project serves as start to build an own Lift System.
+	
+	Content:
+		- Main -> Main Entry Point for your application
+		- Main_Modell -> Process model for inhouse development
+		
+	Task call order with model:
+		- Main_Modell
+		- Main
+
+	Remark for real Model:
+		- Enable I/O Devices
+		- Remove Main_Modell
+		- Deactivate "Simulation Mode" on 'Achse 1'
+		- Activate Project and login
+
+
+	Here starts your Code! Have Fun!!!
+*)
+
+fbPower(Axis := IO_L1.LiftAxis);]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
