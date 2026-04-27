@@ -5,31 +5,144 @@
 VAR_INPUT
 	Simulation : BOOL; //Bei True wird über S_Zielposition die Zielpostion manuell übergeben
 	S_Zielposition : DINT; //Zielpostion zum Testen des Bausteins
-	State : INT;
 	
+
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	State :ENUM_Achse;
+	Zielposition : LREAL;
+	Start : BOOL;
+	AktuellePosition : LREAL;
+	Referenzieren : BOOL;
+	Error	: BOOL;
+	Done	: BOOL;
+	Busy 	: BOOL;
 	
 	fbPower    : MC_Power;
     fbHome     : MC_Home;
     fbMoveAbs  : MC_MoveAbsolute;
     fbStop     : MC_Stop;
     fbReset    : MC_Reset;
+	AchseReferenzieren : BOOL;
 
 END_VAR
-VAR_OUTPUT
-END_VAR
-VAR
+VAR_IN_OUT
+	Achse : AXIS_REF;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE State OF
+	ENUM_Achse.Warten: // Achse nicht eingeschalten 
+		Busy := FALSE;
+		Error := FALSE;
+		
+		IF Start AND NOT fbPower.Status THEN
+			Start := FALSE;
+			Done := FALSE;
+			Busy := TRUE;
+			State := ENUM_Achse.PowerOn;
+		END_IF
+		IF Start AND fbPower.Status THEN
+			Start := FALSE;
+			Done := FALSE;
+			Busy := TRUE;
+			State := ENUM_Achse.Positionieren;
+		END_IF
+		IF AchseReferenzieren AND fbPower.Status THEN //Falls Fahrsystem Referenzierung durchführen will
+			AchseReferenzieren := FALSE;
+			Done := FALSE;
+			Busy := TRUE;
+			State := ENUM_Achse.Referenzieren;
+		END_IF
+		
+	ENUM_Achse.PowerOn: // Achse einschalten
+		fbPower(
+			Axis:= Achse, 
+			Enable:= TRUE, 
+			Enable_Positive:= TRUE, 
+			Enable_Negative:= TRUE,  );
+			 
+		IF fbPower.Status THEN
+			State := ENUM_Achse.Referenzieren;
+		END_IF
+		IF fbPower.Error THEN
+			Busy := FALSE;
+			Error := TRUE; 
+			State := ENUM_Achse.Error;
+		END_IF
+		
+	ENUM_Achse.Referenzieren:
+		fbHome(
+			Axis:= Achse , 
+			Execute:= TRUE , 
+			Position:= DEFAULT_HOME_POSITION, 
+			HomingMode:= MC_DefaultHoming, 
+			 );
+			
+		IF fbHome.Done THEN
+			Done := TRUE;
+			Busy := FALSE;
+			State := ENUM_Achse.Warten;
+		END_IF
+		IF fbHome.Error THEN
+			Error := TRUE;
+			State := ENUM_Achse.Error;
+		END_IF
+		
+	ENUM_Achse.Positionieren:
+		fbMoveAbs(
+			Axis:= Achse, 
+			Execute:= TRUE , 
+			Position:= Zielposition, 
+			Velocity:= 200.0 , //Kein plan wie gross der Wert sein sollte
+			 );
+		IF fbMoveAbs.Done THEN
+			
+		END_IF
+			
+	ENUM_Achse.Error:  //Bedinung einfügen, um aus Error zu kommen
+		Error := TRUE;
+		
+	
+	
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="M_getDirection" Id="{8e81de8d-564c-4009-99ba-fd51c69165cb}">
+      <Declaration><![CDATA[METHOD PRIVATE M_getDirection : BOOL
+VAR_INPUT
+	md_Zielposition : LREAL;
 END_VAR
 ]]></Declaration>
-    <Implementation>
-      <ST><![CDATA[]]></ST>
-    </Implementation>
+      <Implementation>
+        <ST><![CDATA[IF md_Zielposition > AktuellePosition THEN
+	M_getDirection := TRUE;
+END_IF
+IF md_Zielposition < AktuellePosition THEN
+	M_getDirection := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_getPosition" Id="{570ed11c-426e-45d7-8003-177348c7893c}">
+      <Declaration><![CDATA[METHOD PUBLIC M_getPosition : LREAL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_getPosition := AktuellePosition;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_isBusy" Id="{6423229f-a302-4c37-8c3b-89d8e1448911}">
       <Declaration><![CDATA[METHOD M_isBusy : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF Busy THEN
+	M_isBusy := TRUE;
+ELSE
+	M_isBusy := FALSE;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_isDone" Id="{61615abe-aa79-46b7-a964-452b2f051703}">
@@ -38,7 +151,11 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF Done THEN
+	M_isDone := TRUE;
+ELSE
+	M_isDone := FALSE;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_isReady" Id="{b97c4278-fc2a-461d-90bc-116fffff6ac8}">
@@ -47,17 +164,28 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF Ready THEN
+	M_isReady := TRUE;
+ELSE
+	M_isReady := FALSE;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Movetoposition" Id="{b52020ef-93e8-4c9f-84df-fcf44f2a7113}">
       <Declaration><![CDATA[METHOD PUBLIC M_Movetoposition : BOOL
 VAR_INPUT
-	Zielposition : DINT;
+	m_Zielposition : LREAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF (Done) THEN
+	Zielposition := m_Zielposition; 
+	Start := TRUE;
+	M_Movetoposition := TRUE;
+ELSE
+	M_Movetoposition := FALSE;
+END_IF
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Referenzieren" Id="{9753baee-eb42-4872-b4d3-7abda7495a95}">
@@ -66,7 +194,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF (Done) THEN
+	AchseReferenzieren := TRUE;
+	M_Referenzieren := TRUE;
+ELSE
+	M_Referenzieren := FALSE;
+END_IF]]></ST>
       </Implementation>
     </Method>
   </POU>

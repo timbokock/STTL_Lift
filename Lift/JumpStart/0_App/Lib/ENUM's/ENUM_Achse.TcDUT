@@ -10,7 +10,8 @@ TYPE ENUM_Achse :
 	Referenzieren := 1,
 	Warten := 2,
 	Positionieren := 3,
-	Error := 4,
+	Error := 4
+	
 	
 );
 END_TYPE

@@ -35,7 +35,7 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="0_App\Lib\ENUM_Achse.TcDUT">
+    <Compile Include="0_App\Lib\ENUM%27s\ENUM_Achse.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="0_App\Lib\FB_Achse.TcPOU">
@@ -114,6 +114,7 @@
   <ItemGroup>
     <Folder Include="0_App" />
     <Folder Include="0_App\Lib" />
+    <Folder Include="0_App\Lib\ENUM%27s" />
     <Folder Include="7_Visu\Common" />
     <Folder Include="9_Modell" />
     <Folder Include="7_Visu" />
