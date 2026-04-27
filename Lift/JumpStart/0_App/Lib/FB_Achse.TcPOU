@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Achse" Id="{317457c4-2b7a-407c-8e58-d88b7f8b4727}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Achse
+VAR_INPUT
+	Simulation : BOOL; //Bei True wird über S_Zielposition die Zielpostion manuell übergeben
+	S_Zielposition : DINT; //Zielpostion zum Testen des Bausteins
+	State : INT;
+	
+	
+	fbPower    : MC_Power;
+    fbHome     : MC_Home;
+    fbMoveAbs  : MC_MoveAbsolute;
+    fbStop     : MC_Stop;
+    fbReset    : MC_Reset;
+
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="M_isBusy" Id="{6423229f-a302-4c37-8c3b-89d8e1448911}">
+      <Declaration><![CDATA[METHOD M_isBusy : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_isDone" Id="{61615abe-aa79-46b7-a964-452b2f051703}">
+      <Declaration><![CDATA[METHOD M_isDone : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_isReady" Id="{b97c4278-fc2a-461d-90bc-116fffff6ac8}">
+      <Declaration><![CDATA[METHOD PUBLIC M_isReady : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Movetoposition" Id="{b52020ef-93e8-4c9f-84df-fcf44f2a7113}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Movetoposition : BOOL
+VAR_INPUT
+	Zielposition : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Referenzieren" Id="{9753baee-eb42-4872-b4d3-7abda7495a95}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Referenzieren : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

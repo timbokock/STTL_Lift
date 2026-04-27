@@ -35,7 +35,16 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="0_App\Lib\ENUM_Achse.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="0_App\Lib\FB_Achse.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="0_App\Lib\FB_MyFB.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="0_App\Lib\ST_Fahrauftrag.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="7_Visu\Common\Control.TcVIS">

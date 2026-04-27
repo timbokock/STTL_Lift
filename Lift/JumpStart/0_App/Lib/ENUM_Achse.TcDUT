@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ENUM_Achse" Id="{4d9d8b76-7320-4284-b01d-4a10f7040a02}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE ENUM_Achse :
+(
+	PowerOn := 0,
+	Referenzieren := 1,
+	Warten := 2,
+	Positionieren := 3,
+	Error := 4,
+	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

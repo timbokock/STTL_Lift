@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_Fahrauftrag" Id="{c46397b2-1b7a-4311-8bd6-25537000d30e}">
+    <Declaration><![CDATA[TYPE ST_Fahrauftrag :
+STRUCT
+	Startstockwerk : INT;
+	Zielstockwerk : INT;
+	istAktiv : BOOL;
+	Auftragsnummer : DINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
