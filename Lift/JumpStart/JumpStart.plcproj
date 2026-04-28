@@ -35,7 +35,10 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="0_App\Lib\ENUM%27s\ENUM_Achse.TcDUT">
+    <Compile Include="0_App\Lib\Diverses\ENUM_Achse.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="0_App\Lib\Diverses\ST_Fahrauftrag.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="0_App\Lib\FB_Achse.TcPOU">
@@ -44,8 +47,15 @@
     <Compile Include="0_App\Lib\FB_MyFB.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="0_App\Lib\ST_Fahrauftrag.TcDUT">
+    <Compile Include="0_App\Lib\FB_Taskmanager.TcPOU">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="0_App\Lib\FC_GetFloorPosition.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="0_App\OrderID_Counter.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="7_Visu\Common\Control.TcVIS">
       <SubType>Code</SubType>
@@ -114,7 +124,7 @@
   <ItemGroup>
     <Folder Include="0_App" />
     <Folder Include="0_App\Lib" />
-    <Folder Include="0_App\Lib\ENUM%27s" />
+    <Folder Include="0_App\Lib\Diverses" />
     <Folder Include="7_Visu\Common" />
     <Folder Include="9_Modell" />
     <Folder Include="7_Visu" />
@@ -211,8 +221,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -236,6 +246,12 @@
         <o>
           <v n="Name">"{29BD8D0C-3586-4548-BB48-497B9A01693F}"</v>
           <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
+            <v>NamingConventions</v>
+            <o>
+              <v n="Name">"NamingConventions"</v>
+              <d n="SubKeys" t="Hashtable" />
+              <d n="Values" t="Hashtable" />
+            </o>
             <v>Rules</v>
             <o>
               <v n="Name">"Rules"</v>
@@ -284,14 +300,14 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

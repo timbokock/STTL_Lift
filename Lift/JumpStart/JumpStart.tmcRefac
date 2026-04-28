@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactors>
+  <Renames>
+    <RenamedType>
+      <Type guid="b97c4278-fc2a-461d-90bc-116fffff6ac8">M_ISREADY</Type>
+      <From>M_isReady</From>
+      <To>M_hasError</To>
+    </RenamedType>
+  </Renames>
+</Refactors>

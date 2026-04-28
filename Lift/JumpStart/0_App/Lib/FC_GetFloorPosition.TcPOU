@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FC_GetFloorPosition" Id="{32f32dbb-233d-4607-9c6c-b76446bc461d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION FC_GetFloorPosition : LREAL
+VAR_INPUT
+	Stockwerk : INT;
+END_VAR
+VAR
+	Stockwerkpositionen : ARRAY[1..6] OF LREAL := [100.0, 250.0, 330.0, 400.0, 575.0, 700.0]; //fiktionale Werte
+END_VAR
+// Dieser Funktion kann man das Stockwerk übergeben und es wird die Achsposition zurückgegeben
+// Also z.B Stock 5 --> 1250mm 
+// So können wir die Werte ermitteln mit testen und hier eintragen und nicht irgendwo im programm versteckt]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF (Stockwerk >= 1) AND (Stockwerk <= 6) THEN
+    FC_GetFloorPosition := Stockwerkpositionen[Stockwerk];
+ELSE
+    FC_GetFloorPosition := 0.0; // oder irgend ein Fehler
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

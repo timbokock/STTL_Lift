@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="OrderID_Counter" Id="{2fe0a1d8-72a4-4413-84d3-4a8cd0c3527c}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	NextfreeOrderID : INT;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

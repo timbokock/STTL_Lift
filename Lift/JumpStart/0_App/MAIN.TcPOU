@@ -4,10 +4,12 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	fbPower : MC_Power;
+	fbAchse : FB_Achse;
+	Guten: AXIS_REF;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
+      <ST><![CDATA[fbAchse(Simulation:= FALSE, S_Zielposition:= , Achse:= IO_L1.LiftAxis);
 (*
 	Main Template
 	-------------

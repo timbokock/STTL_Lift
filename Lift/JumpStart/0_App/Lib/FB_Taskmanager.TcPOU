@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Taskmanager" Id="{f3825db2-9291-414e-be33-56fe84000c9c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Taskmanager
+VAR_INPUT
+	Auftragerstellen : BOOL; //nur test
+	Auftraguebergeben : BOOL; //nur test
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	Auftraege : ARRAY[1..10] OF ST_Fahrauftrag; //bin was am probieren
+	Accept : BOOL; // nur test
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//nur testen einen auftrag erstellen und meinem Baustein übergeben
+IF Auftragerstellen THEN
+	Auftraege[1].Auftragsnummer := OrderID_Counter.NextfreeOrderID;
+	Auftraege[1].istAktiv := TRUE;
+	Auftraege[1].Startstockwerk := 2;
+	Auftraege[1].Zielstockwerk := 6;
+	OrderID_Counter.NextfreeOrderID := OrderID_Counter.NextfreeOrderID + 1;
+END_IF
+
+IF Auftraguebergeben THEN
+	Accept := FB_Achse.M_Movetoposition(Auftraege[1]);
+END_IF
+
+
+//Hier deinen Code einfügen du kleiner weisser Gauner]]></ST>
+    </Implementation>
+    <Method Name="M_newTask" Id="{2040297e-135a-43a2-847f-520fb3fb186c}">
+      <Declaration><![CDATA[METHOD PUBLIC M_newTask : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
