@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Tuer" Id="{ce7c9125-ad9c-4e95-8ddd-f81fee6abf98}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Tuer
+VAR_INPUT
+	SensorOpen : BOOL;
+	SensorClosed : BOOL;
+	Lichtschranke : BOOL;
+END_VAR
+VAR_OUTPUT
+	MotorOpen : BOOL;
+	MotorClose : BOOL;
+END_VAR
+VAR
+	Tuerablaufstarten : BOOL;
+	Stockwerk : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="M_Tuerablaufstarten" Id="{51df235a-8b8a-4d18-9616-6b8239ca1c31}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Tuerablaufstarten : BOOL
+VAR_INPUT
+	m_Stockwerk : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF m_Stockwerk >= 1 AND m_Stockwerk <= 6 THEN
+	Tuerablaufstarten := TRUE;
+	Stockwerk := m_Stockwerk;
+	M_Tuerablaufstarten := TRUE;
+ELSE
+	M_Tuerablaufstarten := FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

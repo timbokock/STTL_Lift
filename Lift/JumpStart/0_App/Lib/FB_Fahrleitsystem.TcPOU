@@ -7,6 +7,9 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+	fbTuer : ARRAY[1..6] OF FB_Tuer;
+	fbAchse : FB_Achse;
+	
 END_VAR
 ]]></Declaration>
     <Implementation>

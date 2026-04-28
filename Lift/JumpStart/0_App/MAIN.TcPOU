@@ -3,10 +3,6 @@
   <POU Name="MAIN" Id="{64cc9234-739d-43ff-b35d-7e9cae01cb71}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	fbPower : MC_Power;
-	fbAchse : FB_Achse;
-	fbTaskmanager : FB_TestTaskmanager;
-	Guten: AXIS_REF;
 	Auftragerstellen : BOOL;
 	Auftraguebergeben : BOOL;
 END_VAR
