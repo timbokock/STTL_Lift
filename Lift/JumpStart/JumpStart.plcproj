@@ -44,10 +44,13 @@
     <Compile Include="0_App\Lib\FB_Achse.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="0_App\Lib\FB_MyFB.TcPOU">
+    <Compile Include="0_App\Lib\FB_Fahrleitsystem.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="0_App\Lib\FB_Taskmanager.TcPOU">
+    <Compile Include="0_App\Lib\FB_Fahrlogik1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="0_App\Lib\FB_TestTaskmanager.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="0_App\Lib\FC_GetFloorPosition.TcPOU">

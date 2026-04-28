@@ -5,11 +5,15 @@
 VAR
 	fbPower : MC_Power;
 	fbAchse : FB_Achse;
+	fbTaskmanager : FB_TestTaskmanager;
 	Guten: AXIS_REF;
+	Auftragerstellen : BOOL;
+	Auftraguebergeben : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[fbAchse(Simulation:= FALSE, S_Zielposition:= , Achse:= IO_L1.LiftAxis);
+fbTaskmanager(Auftragerstellen:= Auftragerstellen , Auftraguebergeben:=Auftraguebergeben );
 (*
 	Main Template
 	-------------

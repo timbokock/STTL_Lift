@@ -6,5 +6,10 @@
       <From>M_isReady</From>
       <To>M_hasError</To>
     </RenamedType>
+    <RenamedType>
+      <Type guid="f3825db2-9291-414e-be33-56fe84000c9c">FB_TASKMANAGER</Type>
+      <From>FB_Taskmanager</From>
+      <To>FB_TestTaskmanager</To>
+    </RenamedType>
   </Renames>
 </Refactors>
