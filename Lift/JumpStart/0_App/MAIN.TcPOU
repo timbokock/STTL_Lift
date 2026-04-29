@@ -5,11 +5,23 @@
 VAR
 	Auftragerstellen : BOOL;
 	Auftraguebergeben : BOOL;
+	fbAchse : FB_Achse;
+	fcReadPosition : MC_ReadActualPosition;
+	AktuellePosition : LREAL;
+	
+
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbAchse(Simulation:= FALSE, S_Zielposition:= , Achse:= IO_L1.LiftAxis);
-fbTaskmanager(Auftragerstellen:= Auftragerstellen , Auftraguebergeben:=Auftraguebergeben );
+      <ST><![CDATA[fbAchse(Simulation:= FALSE , S_Zielposition:= 0.0, Achse:=IO_L1.LiftAxis );
+fcReadPosition(
+	Axis:= IO_L1.LiftAxis, 
+	Enable:= TRUE, 
+	Valid=> , 
+	Busy=> , 
+	Error=> , 
+	ErrorID=> , 
+	Position=> AktuellePosition);
 (*
 	Main Template
 	-------------
@@ -33,8 +45,7 @@ fbTaskmanager(Auftragerstellen:= Auftragerstellen , Auftraguebergeben:=Auftrague
 
 	Here starts your Code! Have Fun!!!
 *)
-
-fbPower(Axis := IO_L1.LiftAxis);]]></ST>
+]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

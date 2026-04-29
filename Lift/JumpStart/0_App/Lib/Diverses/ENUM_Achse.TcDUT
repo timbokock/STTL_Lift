@@ -6,9 +6,9 @@
 {attribute 'to_string'}
 TYPE ENUM_Achse :
 (
-	PowerOn := 0,
-	Referenzieren := 1,
-	Warten := 2,
+	PowerOn := 1,
+	Referenzieren := 2,
+	Warten := 0,
 	Positionieren := 3,
 	Error := 4
 	

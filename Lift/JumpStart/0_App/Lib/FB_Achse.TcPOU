@@ -4,13 +4,16 @@
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Achse
 VAR_INPUT
 	Simulation : BOOL; //Bei True wird über S_Zielposition die Zielpostion manuell übergeben
-	S_Zielposition : DINT; //Zielpostion zum Testen des Bausteins
+	S_Zielposition : LREAL; //Zielpostion zum Testen des Bausteins
 	
 
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+	FehlercodePower : UDINT;
+	FehlercodeMove : UDINT;
+	FehlercodeRef: UDINT;
 	State :ENUM_Achse;
 	Zielposition : LREAL;
 	Start : BOOL;
@@ -18,6 +21,8 @@ VAR
 	Referenzieren : BOOL;
 	MoveAbsExecute : BOOL;
 	HomeExecute : BOOL;
+	ResetExecute : BOOL;
+	PowerExecute : BOOL;
 	Error	: BOOL;
 	Done	: BOOL;
 	Busy 	: BOOL;
@@ -34,14 +39,26 @@ VAR_IN_OUT
 	Achse : AXIS_REF;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[CASE State OF
-	ENUM_Achse.Warten: // Achse nicht eingeschalten 
+      <ST><![CDATA[fbPower(
+		Axis:= Achse, 
+		Enable:= PowerExecute, 
+		Enable_Positive:= TRUE, 
+		Enable_Negative:= TRUE,  
+		ErrorID => FehlercodePower);
+		
+IF Simulation THEN
+		Zielposition := S_Zielposition;
+	END_IF
+	
+CASE State OF
+		ENUM_Achse.Warten: // Achse nicht eingeschalten 
 		Error := FALSE;
 		
 		IF Start AND NOT fbPower.Status THEN
 			Start := FALSE;
 			Done := FALSE;
 			Busy := TRUE;
+			ResetExecute := TRUE;
 			State := ENUM_Achse.PowerOn;
 		END_IF
 		IF Start AND fbPower.Status THEN
@@ -62,15 +79,14 @@ END_VAR]]></Declaration>
 			AchseReferenzieren := FALSE;
 			Done := FALSE;
 			Busy := TRUE;
+			ResetExecute := TRUE;
 			State := ENUM_Achse.PowerOn;
 		END_IF
 		
 	ENUM_Achse.PowerOn: // Achse einschalten
-		fbPower(
-			Axis:= Achse, 
-			Enable:= TRUE, 
-			Enable_Positive:= TRUE, 
-			Enable_Negative:= TRUE,  );
+
+		PowerExecute := TRUE;
+		
 			 
 		IF fbPower.Status THEN
 			HomeExecute := TRUE;
@@ -84,13 +100,21 @@ END_VAR]]></Declaration>
 		END_IF
 		
 	ENUM_Achse.Referenzieren:
-		fbHome(
+	
+			fbHome(
 			Axis:= Achse , 
 			Execute:= HomeExecute , 
-			Position:= DEFAULT_HOME_POSITION, 
+			Position:= 0.0, 
 			HomingMode:= MC_DefaultHoming, 
+			bCalibrationCam := IO_L1.Control_LiftAxisReference,
+			ErrorID => FehlercodeRef
 			 );
-		HomeExecute := FALSE;	
+			
+		IF fbHome.Busy THEN
+			HomeExecute := FALSE;
+		END_IF
+
+	
 		IF fbHome.Done THEN
 			Done := TRUE;
 			Busy := FALSE;
@@ -106,8 +130,10 @@ END_VAR]]></Declaration>
 			Axis:= Achse, 
 			Execute:= MoveAbsExecute, 
 			Position:= Zielposition, 
-			Velocity:= 200.0 , //Kein plan wie gross der Wert sein sollte
+			Velocity:= 400.0 , //Kein plan wie gross der Wert sein sollte
+			ErrorID => FehlercodeMove
 			 );
+			 
 		MoveAbsExecute := FALSE;
 		IF fbMoveAbs.Done THEN
 			Done := TRUE;

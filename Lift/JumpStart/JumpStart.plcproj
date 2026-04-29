@@ -117,10 +117,10 @@
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PlcTask.TcTTO">
+    <Compile Include="0_App\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="0_App\MAIN.TcPOU">
+    <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Visualization Manager.TcVMO">

@@ -1424,7 +1424,7 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 	</DataTypes>
-	<Project ProjectGUID="{93673C18-AB3F-467B-8D1F-FDE1EB109284}" TargetNetId="192.168.10.51.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
+	<Project ProjectGUID="{93673C18-AB3F-467B-8D1F-FDE1EB109284}" TargetNetId="192.168.10.49.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
 			<Tasks>
 				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
@@ -1458,7 +1458,7 @@ External Setpoint Generation:
 					</AxisPara>
 					<Encoder Name="Enc" EncType="4">
 						<EncPara ScaleFactorNumerator="0.045066" MaxCount="#x0000ffff">
-							<Inc RefSoftSyncMask="#x0000ffff"/>
+							<Inc RefSearchInverse="true" RefSyncInverse="false" RefMode="1" RefSoftSyncMask="#x0000ffff"/>
 							<TimeComp TimeCompMode="1" EncDelayCycles="4"/>
 						</EncPara>
 						<Vars VarGrpType="1">
