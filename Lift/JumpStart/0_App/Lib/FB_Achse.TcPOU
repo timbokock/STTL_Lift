@@ -26,7 +26,7 @@ VAR
 	Error	: BOOL;
 	Done	: BOOL;
 	Busy 	: BOOL;
-	
+	AchseReset :BOOL;
 	fbPower    : MC_Power;
     fbHome     : MC_Home;
     fbMoveAbs  : MC_MoveAbsolute;
@@ -149,10 +149,30 @@ CASE State OF
 			
 	ENUM_Achse.Error:  //Bedinung einfügen, um aus Error zu kommen
 		Error := TRUE;
-		
-	
-	
-END_CASE]]></ST>
+		IF IO_L1.Control_Reset THEN
+			AchseReset := TRUE; 
+			fbReset(
+				Axis:= Achse , 
+				Execute:= AchseReset, 
+				Done=> , 
+				Busy=> , 
+				Error=> Error, 
+				ErrorID=> );
+				
+			IF fbReset.Done THEN
+				AchseReset := FALSE;
+				State := ENUM_Achse.Warten;
+			END_IF
+		END_IF
+END_CASE
+
+IF Error THEN
+	IO_L1.Control_LED_Red := TRUE;
+	IO_L1.Control_LED_Blue := TRUE;
+ELSE 
+	IO_L1.Control_LED_Red := FALSE;
+	IO_L1.Control_LED_Blue := FALSE;
+END_IF]]></ST>
     </Implementation>
     <Method Name="M_getDirection" Id="{8e81de8d-564c-4009-99ba-fd51c69165cb}">
       <Declaration><![CDATA[METHOD PRIVATE M_getDirection : BOOL

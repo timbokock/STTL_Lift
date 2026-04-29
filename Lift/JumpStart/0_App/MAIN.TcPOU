@@ -8,6 +8,7 @@ VAR
 	fbAchse : FB_Achse;
 	fcReadPosition : MC_ReadActualPosition;
 	AktuellePosition : LREAL;
+	fbTuer : FB_Tuer;
 	
 
 END_VAR
@@ -22,6 +23,38 @@ fcReadPosition(
 	Error=> , 
 	ErrorID=> , 
 	Position=> AktuellePosition);
+	
+fbTuer(
+	SensorOpen1:= IO_L1.Door_1_SensorOpen, 
+	SensorOpen2:= , 
+	SensorOpen3:= , 
+	SensorOpen4:= , 
+	SensorOpen5:= , 
+	SensorOpen6:= , 
+	SensorClosed1:= IO_L1.Door_1_SensorClosed, 
+	SensorClosed2:= , 
+	SensorClosed3:= , 
+	SensorClosed4:= , 
+	SensorClosed5:= , 
+	SensorClosed6:= , 
+	Lichtschranke1:= IO_L1.Door_1_SensorActive, 
+	Lichtschranke2:= , 
+	Lichtschranke3:= , 
+	Lichtschranke4:= , 
+	Lichtschranke5:= , 
+	Lichtschranke6:= , 
+	MotorOpen1=> IO_L1.Door_1_MotorOpen, 
+	MotorOpen2=> , 
+	MotorOpen3=> , 
+	MotorOpen4=> , 
+	MotorOpen5=> , 
+	MotorOpen6=> , 
+	MotorClose1=> IO_L1.Door_1_MotorClose, 
+	MotorClose2=> , 
+	MotorClose3=> , 
+	MotorClose4=> , 
+	MotorClose5=> , 
+	MotorClose6=> );
 (*
 	Main Template
 	-------------

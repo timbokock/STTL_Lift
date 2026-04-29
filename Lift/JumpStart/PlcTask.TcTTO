@@ -5,6 +5,9 @@
     <CycleTime>10000</CycleTime>
     <Priority>20</Priority>
     <PouCall>
+      <Name>MAIN_Modell</Name>
+    </PouCall>
+    <PouCall>
       <Name>MAIN</Name>
     </PouCall>
     <TaskFBGuid>{53f56d2a-ff07-432a-8260-945ece19e780}</TaskFBGuid>

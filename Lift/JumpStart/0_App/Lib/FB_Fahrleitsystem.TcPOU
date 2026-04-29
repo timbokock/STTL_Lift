@@ -3,17 +3,49 @@
   <POU Name="FB_Fahrleitsystem" Id="{7583cd05-68d7-4c93-9869-d2e80ddd0766}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Fahrleitsystem
 VAR_INPUT
+	
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	fbTuer : ARRAY[1..6] OF FB_Tuer;
-	fbAchse : FB_Achse;
+	Busy	:	BOOL;
+	StartStockwerk:	INT := 1;
+	ZielStockwerk:	INT;
 	
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="M_AcceptTask" Id="{d5baa6a5-1e56-45e8-ab59-264b78e34233}">
+      <Declaration><![CDATA[METHOD PUBLIC M_AcceptTask : BOOL
+VAR_INPUT
+Task : ST_Fahrauftrag;
+
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Busy THEN
+	StartStockwerk := Task.Startstockwerk;
+	Zielstockwerk := Task.Zielstockwerk;
+	Busy := TRUE;
+	M_AcceptTask := FALSE;
+	RETURN;
+END_IF
+
+//Fahrmechanik
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_isDone" Id="{12d4a25e-6ae5-44be-a9c4-3f89ee142147}">
+      <Declaration><![CDATA[METHOD PUBLIC M_isDone : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

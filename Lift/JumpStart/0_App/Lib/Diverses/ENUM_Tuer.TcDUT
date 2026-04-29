@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ENUM_Tuer" Id="{5c9443b2-ab35-4bfd-ad10-11a25cf7b18c}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE ENUM_Tuer :
+(
+	
+    TuereZu,
+    TuereOeffnen,
+    TuereAuf,
+    TuereSchliessen,
+    Error
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

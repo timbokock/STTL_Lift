@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Panel" Id="{51858f71-723c-4454-b993-737c237e0e31}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Panel
+VAR_INPUT
+Panel_1_Btn : ARRAY[1..6] OF BOOL; // Panel Level 1 - Buttons
+Panel_2_Btn : ARRAY[1..6] OF BOOL; // Panel Level 2 - Buttons
+Panel_3_Btn : ARRAY[1..6] OF BOOL; // Panel Level 3 - Buttons
+Panel_4_Btn : ARRAY[1..6] OF BOOL; // Panel Level 4 - Buttons
+Panel_5_Btn : ARRAY[1..6] OF BOOL; // Panel Level 5 - Buttons
+Panel_6_Btn : ARRAY[1..6] OF BOOL; // Panel Level 6 - Buttons
+
+
+END_VAR
+VAR_OUTPUT
+	//LEDS
+	Panel_1_BtnLED : ARRAY[1..6] OF BOOL;
+	Panel_2_BtnLED : ARRAY[1..6] OF BOOL;
+	Panel_3_BtnLED : ARRAY[1..6] OF BOOL;
+	Panel_4_BtnLED : ARRAY[1..6] OF BOOL;
+	Panel_5_BtnLED : ARRAY[1..6] OF BOOL;
+	Panel_6_BtnLED : ARRAY[1..6] OF BOOL;
+	
+	Panel_1_Led_Up  : BOOL;
+	Panel_1_Led_Down: BOOL;
+	Panel_2_Led_Up  : BOOL;
+	Panel_2_Led_Down: BOOL;
+	Panel_3_Led_Up  : BOOL;
+	Panel_3_Led_Down: BOOL;
+	Panel_4_Led_Up  : BOOL;
+	Panel_4_Led_Down: BOOL;
+	Panel_5_Led_Up  : BOOL;
+	Panel_5_Led_Down: BOOL;
+	Panel_6_Led_Up  : BOOL;
+	Panel_6_Led_Down: BOOL;
+	
+	//7-Segment-Anzeige
+	Panel_1_BCD_Bit : ARRAY[0..3] OF BOOL;
+	Panel_2_BCD_Bit : ARRAY[0..3] OF BOOL;
+	Panel_3_BCD_Bit : ARRAY[0..3] OF BOOL;
+	Panel_4_BCD_Bit : ARRAY[0..3] OF BOOL;
+	Panel_5_BCD_Bit : ARRAY[0..3] OF BOOL;
+	Panel_6_BCD_Bit : ARRAY[0..3] OF BOOL;
+END_VAR
+VAR_IN_OUT
+	fbTaskManager : FB_TaskManager;
+	
+END_VAR
+VAR
+Panel_Btn : ARRAY[1..6] OF ARRAY [1..6] OF BOOL;
+TrigBtn : ARRAY[1..6] OF ARRAY [1..6] OF R_TRIG;
+
+meinStockwerk	:	INT;
+meinZiel		:	INT;
+AuftragAngenommen : BOOL;
+
+//LED
+Panel_LEDs	:	ARRAY[1..6] OF ARRAY[1..6] OF BOOL;
+Panel_LED_UP:	ARRAY[1..6] OF BOOL;
+Panel_LED_Down:	ARRAY[1..6] OF BOOL;
+
+//7-Segment
+Panel_BCD	:	ARRAY[1..6] OF ARRAY[0..3] OF BOOL;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Stockwerkbuttons
+Panel_Btn[1] := Panel_1_Btn;
+Panel_Btn[2] := Panel_2_Btn;
+Panel_Btn[3] := Panel_3_Btn;
+Panel_Btn[4] := Panel_4_Btn;
+Panel_Btn[5] := Panel_5_Btn;
+Panel_Btn[6] := Panel_6_Btn;
+
+
+FOR meinStockwerk := 1 TO 6 DO
+	FOR meinZiel := 1 TO 6 DO
+			TrigBtn[meinStockwerk][meinZiel](CLK := Panel_Btn[meinStockwerk][meinZiel]);
+        	IF TrigBtn[meinStockwerk][meinZiel].Q THEN
+			 	AuftragAngenommen := fbTaskManager.M_newTask(Start := meinStockwerk, Ziel := meinZiel);
+				
+				IF AuftragAngenommen THEN
+                Panel_LEDs[meinStockwerk][meinZiel] := TRUE;
+				IF meinStockwerk < meinZiel THEN
+					Panel_LED_UP[meinStockwerk] := TRUE;
+				END_IF
+				IF meinStockwerk > meinZiel THEN
+					Panel_LED_Down[meinStockwerk] := TRUE;
+				END_IF
+				
+				//BCD
+				Panel_BCD[meinStockwerk][0] := meinZiel.0; // Bit 0 (Wertigkeit 1)
+    			Panel_BCD[meinStockwerk][1] := meinZiel.1; // Bit 1 (Wertigkeit 2)
+    			Panel_BCD[meinStockwerk][2] := meinZiel.2; // Bit 2 (Wertigkeit 4)
+    			Panel_BCD[meinStockwerk][3] := meinZiel.3; // Bit 3 (Wertigkeit 8)
+				
+           		 ELSE
+                // Fehlermanagement
+            END_IF
+        END_IF
+	END_FOR
+END_FOR
+
+//Stockwerk LEDs
+Panel_1_BtnLED := Panel_LEDs[1];
+Panel_2_BtnLED := Panel_LEDs[2];
+Panel_3_BtnLED := Panel_LEDs[3];
+Panel_4_BtnLED := Panel_LEDs[4];
+Panel_5_BtnLED := Panel_LEDs[5];
+Panel_6_BtnLED := Panel_LEDs[6];
+
+// Hoch LEDs
+Panel_1_Led_Up := Panel_LED_UP[1];
+Panel_2_Led_Up := Panel_LED_UP[2];
+Panel_3_Led_Up := Panel_LED_UP[3];
+Panel_4_Led_Up := Panel_LED_UP[4];
+Panel_5_Led_Up := Panel_LED_UP[5];
+Panel_6_Led_Up := Panel_LED_UP[6];
+
+// Runter LEDs
+Panel_1_Led_Down := Panel_LED_Down[1];
+Panel_2_Led_Down := Panel_LED_Down[2];
+Panel_3_Led_Down := Panel_LED_Down[3];
+Panel_4_Led_Down := Panel_LED_Down[4];
+Panel_5_Led_Down := Panel_LED_Down[5];
+Panel_6_Led_Down := Panel_LED_Down[6];
+
+//BCD
+Panel_1_BCD_Bit := Panel_BCD[1];
+Panel_2_BCD_Bit := Panel_BCD[2];
+Panel_3_BCD_Bit := Panel_BCD[3];
+Panel_4_BCD_Bit := Panel_BCD[4];
+Panel_5_BCD_Bit := Panel_BCD[5];
+Panel_6_BCD_Bit := Panel_BCD[6];
+
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
