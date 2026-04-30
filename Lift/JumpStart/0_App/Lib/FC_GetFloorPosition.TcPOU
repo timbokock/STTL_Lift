@@ -6,7 +6,7 @@ VAR_INPUT
 	Stockwerk : INT;
 END_VAR
 VAR
-	Stockwerkpositionen : ARRAY[1..6] OF LREAL := [100.0, 250.0, 330.0, 400.0, 575.0, 700.0]; //fiktionale Werte
+	Stockwerkpositionen : ARRAY[1..6] OF LREAL := [60.0, 300.0, 540.0, 770.0, 1020.0, 1250.0]; //fiktionale Werte
 END_VAR
 // Dieser Funktion kann man das Stockwerk übergeben und es wird die Achsposition zurückgegeben
 // Also z.B Stock 5 --> 1250mm 

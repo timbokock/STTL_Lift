@@ -38,6 +38,7 @@ VAR_OUTPUT
 	MotorClose4 : BOOL;
 	MotorClose5 : BOOL;
 	MotorClose6 : BOOL;
+	Done : BOOL;
 END_VAR
 VAR
 	TuerzyklusStarten : BOOL;
@@ -66,6 +67,7 @@ MotorOpen5 := FALSE;
 MotorClose5 := FALSE;
 MotorOpen6 := FALSE;
 MotorClose6 := FALSE;
+Done := FALSE;
 
 // Timer nur aktiv, wenn Tür wirklich offen UND im Offen-Warten-Schritt
 ton1(
@@ -226,6 +228,7 @@ CASE State OF
             ELSE
                 MotorClose1 := FALSE;
                 TuerzyklusStarten := FALSE;
+				Done := TRUE;
                 State := ENUM_Tuer.TuereZu;
             END_IF
         END_IF
@@ -242,6 +245,7 @@ CASE State OF
             ELSE
                 MotorClose2 := FALSE;
                 TuerzyklusStarten := FALSE;
+				Done := TRUE;
                 State := ENUM_Tuer.TuereZu;
             END_IF
         END_IF
@@ -258,6 +262,7 @@ CASE State OF
             ELSE
                 MotorClose3 := FALSE;
                 TuerzyklusStarten := FALSE;
+				Done := TRUE;
                 State := ENUM_Tuer.TuereZu;
             END_IF
         END_IF
@@ -274,6 +279,7 @@ CASE State OF
             ELSE
                 MotorClose4 := FALSE;
                 TuerzyklusStarten := FALSE;
+				Done := TRUE;
                 State := ENUM_Tuer.TuereZu;
             END_IF
         END_IF
@@ -290,6 +296,7 @@ CASE State OF
             ELSE
                 MotorClose5 := FALSE;
                 TuerzyklusStarten := FALSE;
+				Done := TRUE;
                 State := ENUM_Tuer.TuereZu;
             END_IF
         END_IF
@@ -306,6 +313,7 @@ CASE State OF
             ELSE
                 MotorClose6 := FALSE;
                 TuerzyklusStarten := FALSE;
+				Done := TRUE;
                 State := ENUM_Tuer.TuereZu;
             END_IF
         END_IF
@@ -325,6 +333,19 @@ END_VAR
 	M_AreDoorsClosed := TRUE;
 ELSE
 	M_AreDoorsClosed := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_isDone" Id="{fc2b4786-e2ff-464a-9600-bf8dbab54ba4}">
+      <Declaration><![CDATA[METHOD PUBLIC M_isDone : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Done THEN
+	M_isDone := TRUE;
+ELSE 
+	M_isDone := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
