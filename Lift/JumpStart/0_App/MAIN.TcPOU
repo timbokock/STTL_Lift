@@ -5,10 +5,10 @@
 VAR
 	Auftragerstellen : BOOL;
 	Auftraguebergeben : BOOL;
-	fbAchse : FB_Achse;
+
 	fcReadPosition : MC_ReadActualPosition;
 	AktuellePosition : LREAL;
-	fbTuer : FB_Tuer;
+
 	Tuertest : BOOL;
 	Stockwerk : INT;
 	
@@ -16,84 +16,13 @@ VAR
 	Fahrtstarten : BOOL;
 	ZielStock : INT;
 	Fahrtzielvertanden : BOOL;
+	fbFahrleitsystem : FB_Fahrleitsystem;
+	fbAchse : FB_Achse;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbAchse(Simulation:= FALSE , S_Zielposition:= 0.0, Achse:=IO_L1.LiftAxis );
-fcReadPosition(
-	Axis:= IO_L1.LiftAxis, 
-	Enable:= TRUE, 
-	Valid=> , 
-	Busy=> , 
-	Error=> , 
-	ErrorID=> , 
-	Position=> AktuellePosition);
-	
-	
-	
-	Testauftrag.Auftragsnummer := 1;
-	Testauftrag.istAktiv := TRUE;
-	Testauftrag.Startstockwerk := 1;
-	Testauftrag.Zielstockwerk := ZielStock;
-	
-	IF Fahrtstarten THEN
-		Fahrtzielvertanden := fbAchse.M_Movetoposition(Testauftrag);
-	END_IF
-	IF fbAchse.M_isDone() THEN
-		Fahrtstarten := FALSE;
-	END_IF
-	
-	
-	
-	
-	
-	
-	
-	
-	
-fbTuer(
-    SensorOpen1 := IO_L1.Door_1_SensorOpen,
-    SensorOpen2 := IO_L1.Door_2_SensorOpen,
-    SensorOpen3 := IO_L1.Door_3_SensorOpen,
-    SensorOpen4 := IO_L1.Door_4_SensorOpen,
-    SensorOpen5 := IO_L1.Door_5_SensorOpen,
-    SensorOpen6 := IO_L1.Door_6_SensorOpen,
-
-    SensorClosed1 := IO_L1.Door_1_SensorClosed,
-    SensorClosed2 := IO_L1.Door_2_SensorClosed,
-    SensorClosed3 := IO_L1.Door_3_SensorClosed,
-    SensorClosed4 := IO_L1.Door_4_SensorClosed,
-    SensorClosed5 := IO_L1.Door_5_SensorClosed,
-    SensorClosed6 := IO_L1.Door_6_SensorClosed,
-
-    Lichtschranke1 := IO_L1.Door_1_SensorActive,
-    Lichtschranke2 := IO_L1.Door_2_SensorActive,
-    Lichtschranke3 := IO_L1.Door_3_SensorActive,
-    Lichtschranke4 := IO_L1.Door_4_SensorActive,
-    Lichtschranke5 := IO_L1.Door_5_SensorActive,
-    Lichtschranke6 := IO_L1.Door_6_SensorActive,
-
-    MotorOpen1 => IO_L1.Door_1_MotorOpen,
-    MotorOpen2 => IO_L1.Door_2_MotorOpen,
-    MotorOpen3 => IO_L1.Door_3_MotorOpen,
-    MotorOpen4 => IO_L1.Door_4_MotorOpen,
-    MotorOpen5 => IO_L1.Door_5_MotorOpen,
-    MotorOpen6 => IO_L1.Door_6_MotorOpen,
-
-    MotorClose1 => IO_L1.Door_1_MotorClose,
-    MotorClose2 => IO_L1.Door_2_MotorClose,
-    MotorClose3 => IO_L1.Door_3_MotorClose,
-    MotorClose4 => IO_L1.Door_4_MotorClose,
-    MotorClose5 => IO_L1.Door_5_MotorClose,
-    MotorClose6 => IO_L1.Door_6_MotorClose
-);
-IF Auftragerstellen THEN
-	Tuertest := fbTuer.M_Tuerablaufstarten(Stockwerk);
-	Auftragerstellen := FALSE; // Hier eventuell mit Trigger Arbeiten also nur bei positivem Trigger die Türen öffnen sonst aufzuaufzuaufzu
-END_IF
-IF fbTuer.M_isDone() THEN
-	Tuertest := FALSE;
-END_IF
+      <ST><![CDATA[
+fbFahrleitsystem();
 
 
 (*

@@ -240,12 +240,12 @@ END_IF]]></ST>
     <Method Name="M_Movetoposition" Id="{b52020ef-93e8-4c9f-84df-fcf44f2a7113}">
       <Declaration><![CDATA[METHOD PUBLIC M_Movetoposition : BOOL
 VAR_INPUT
-	m_Auftrag : ST_Fahrauftrag;
+	ZielStock : INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT Busy AND NOT Error THEN
-	Zielposition := FC_GetFloorPosition(m_Auftrag.Zielstockwerk);
+	Zielposition := FC_GetFloorPosition(ZielStock);
 	Start := TRUE;
 	M_Movetoposition := TRUE; //Rückgabewert
 ELSE
