@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Blinker" Id="{cdbf7701-1067-4234-94b6-eda81fe7e1f0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Blinker
+VAR_INPUT
+    bEnable : BOOL := TRUE;
+    tOn     : TIME := T#500MS;
+    tOff    : TIME := T#500MS;
+END_VAR
+
+VAR_OUTPUT
+    bOut : BOOL;
+END_VAR
+
+VAR
+    tonOn  : TON;
+    tonOff : TON;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT bEnable THEN
+    bOut := FALSE;
+    tonOn(IN := FALSE);
+    tonOff(IN := FALSE);
+ELSE
+    IF bOut THEN
+        tonOn(IN := TRUE, PT := tOn);
+        tonOff(IN := FALSE);
+
+        IF tonOn.Q THEN
+            bOut := FALSE;
+            tonOn(IN := FALSE);
+        END_IF
+    ELSE
+        tonOff(IN := TRUE, PT := tOff);
+        tonOn(IN := FALSE);
+
+        IF tonOff.Q THEN
+            bOut := TRUE;
+            tonOff(IN := FALSE);
+        END_IF
+    END_IF
+END_IF
+
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

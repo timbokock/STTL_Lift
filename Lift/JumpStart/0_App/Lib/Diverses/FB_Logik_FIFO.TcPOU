@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Logik_FIFO" Id="{d52812a5-2086-4671-8327-67350c374281}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Logik_FIFO IMPLEMENTS ITF_Fahrlogik
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="M_getNextTask" Id="{4978f3ec-ecdb-407d-8b46-d7f498895918}">
+      <Declaration><![CDATA[{warning 'Methodenimplementierung hinzufügen'}
+METHOD M_getNextTask : ST_Fahrauftrag
+VAR_INPUT
+	LiftStockwerkAktuell	: INT;
+END_VAR
+VAR_IN_OUT
+	Auftraege	: ARRAY [1..10] OF ST_Fahrauftrag;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+IF Auftraege[1].istAktiv THEN
+    M_getNextTask := Auftraege[1];
+ELSE
+    // Wenn nichts da ist, geben wir einen leeren Struct zurück
+    M_getNextTask.Auftragsnummer := 0; 
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

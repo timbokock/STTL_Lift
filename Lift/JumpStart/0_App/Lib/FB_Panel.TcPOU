@@ -43,10 +43,12 @@ VAR_OUTPUT
 	Panel_6_BCD_Bit : ARRAY[0..3] OF BOOL;
 END_VAR
 VAR_IN_OUT
-	fbTaskManager : FB_TaskManager;
+	
 	
 END_VAR
 VAR
+fbTaskManager : FB_Taskmanager_1;
+
 Panel_Btn : ARRAY[1..6] OF ARRAY [1..6] OF BOOL;
 TrigBtn : ARRAY[1..6] OF ARRAY [1..6] OF R_TRIG;
 

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="ITF_Fahrlogik" Id="{9f28e154-91cb-4cae-ae20-716686d993ce}">
+    <Declaration><![CDATA[INTERFACE ITF_Fahrlogik
+]]></Declaration>
+    <Method Name="M_getNextTask" Id="{97fc65f4-b0a4-4a96-89f4-c8f0babefae2}">
+      <Declaration><![CDATA[METHOD M_getNextTask : ST_Fahrauftrag
+VAR_INPUT
+	LiftStockwerkAktuell : INT;
+END_VAR
+VAR_IN_OUT
+    Auftraege : ARRAY[1..10] OF ST_Fahrauftrag; // Die Liste zum Durchsuchen
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

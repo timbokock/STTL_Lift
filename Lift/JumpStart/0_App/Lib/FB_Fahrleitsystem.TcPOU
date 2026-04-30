@@ -64,10 +64,13 @@ fbTuer(
     MotorClose6 => IO_L1.Door_6_MotorClose
 );
 SicherheitsCheckbestanden := FALSE;
+Done := FALSE;
 CASE State OF
 	
 	ENUM_Fahrsystem.Warten:
 		IF Start THEN
+			Busy := FALSE;
+			Done := FALSE;
 			Start := FALSE;
 			State := ENUM_Fahrsystem.Sicherheitscheck;
 		END_IF
@@ -96,6 +99,7 @@ CASE State OF
 				State := ENUM_Fahrsystem.ZumZielStockwerk;
 			END_IF
 			IF AmZielStockwerk THEN
+				Done := TRUE; 
 				State := ENUM_Fahrsystem.Warten;
 			END_IF
 		END_IF
@@ -103,6 +107,7 @@ CASE State OF
 		AmZielStockwerk := FALSE;
 		Fahrauftragverstanden := fbAchse.M_Movetoposition(StartStockwerk);
 		IF fbAchse.M_isDone() THEN
+			OrderID_Counter.AktuellesStockwerk := StartStockwerk;
 			AktuellesStockwerk := StartStockwerk;
 			AmStartStockwerk := TRUE;
 			State := ENUM_Fahrsystem.Tueren;
@@ -111,6 +116,7 @@ CASE State OF
 		AmStartStockwerk := FALSE;
 		Fahrauftragverstanden := fbAchse.M_Movetoposition(ZielStockwerk);
 		IF fbAchse.M_isDone() THEN
+			OrderID_Counter.AktuellesStockwerk := ZielStockwerk;
 			AktuellesStockwerk := ZielStockwerk;
 			AmZielStockwerk := TRUE;
 			State := ENUM_Fahrsystem.Tueren;

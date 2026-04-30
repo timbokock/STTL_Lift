@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Taskmanager_1" Id="{6d471973-5250-4ea2-a6ce-7d854e2dc9bc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Taskmanager_1
+VAR_INPUT
+	 fbFahrlogik      : ITF_Fahrlogik;
+END_VAR
+VAR_IN_OUT
+	fbFahrleitsystem : FB_Fahrleitsystem;
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	
+   
+	nextFree	:	INT;
+	Auftraege : ARRAY[1..10] OF ST_Fahrauftrag; //bin was am probieren
+	
+	State : INT;
+	StartLogik:	BOOL;
+	NextTask	:	ST_Fahrauftrag;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Case State Of
+	
+00: //Warten
+IF StartLogik THEN
+	StartLogik := FALSE;
+	State := 10;
+END_IF
+
+//-------------------------------------------------------------------------------------------------
+
+10: //Nächste Task von der Fahrlogik geben lassen
+NextTask := fbFahrlogik.M_getNextTask(
+OrderID_Counter.AktuellesStockwerk, Auftraege);
+
+IF NextTask.Auftragsnummer > 0 THEN
+	State := 20;
+ELSE
+	State := 0;
+END_IF
+
+//-------------------------------------------------------------------------------------------------
+
+20://Task dem Fahrleitsystem übergeben
+IF NOT fbFahrleitsystem.M_isBusy() THEN 
+		IF fbFahrleitsystem.M_AcceptTask(NextTask) THEN
+            State := 30; 
+        END_IF
+END_IF
+
+//-------------------------------------------------------------------------------------------------
+30:
+
+        IF fbFahrleitsystem.M_isDone() THEN
+            State := 40;
+        END_IF
+
+//----------------------------------------------------------------------------------------------------
+
+40: //Alles zurücksetzten auftrag löschen und wieder in State 1 gehen
+	IF M_deleteFinishedTask(TaskToDelete :=  NextTask) THEN
+		State:=00;
+	END_IF
+
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="M_deleteFinishedTask" Id="{16008b88-921a-4a11-8f42-1a545f56880f}">
+      <Declaration><![CDATA[METHOD M_deleteFinishedTask : BOOL
+VAR_INPUT
+	TaskToDelete : ST_Fahrauftrag;
+	
+END_VAR
+VAR
+	i:DINT;
+	j:DINT;
+	IndextoDelete : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR j:=1 TO UPPER_BOUND(Auftraege, 1) DO
+	IF TaskToDelete.Auftragsnummer	= Auftraege[j].Auftragsnummer AND Auftraege[j].istAktiv THEN  
+		IndextoDelete := j;
+		EXIT;
+	END_IF
+END_FOR
+
+IF IndextoDelete > 0 THEN
+	FOR i := IndextoDelete TO (UPPER_BOUND(Auftraege,1)-1) DO
+		Auftraege[i] := Auftraege[i+1];
+	END_FOR
+
+	Auftraege[UPPER_BOUND(Auftraege,1)].istAktiv	:= FALSE;
+	Auftraege[UPPER_BOUND(Auftraege,1)].Auftragsnummer := 0;
+	Auftraege[UPPER_BOUND(Auftraege,1)].Startstockwerk := 0;
+	Auftraege[UPPER_BOUND(Auftraege,1)].Zielstockwerk	:= 0;
+
+	M_deleteFinishedTask := TRUE;
+ELSE
+	M_deleteFinishedTask := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_newTask" Id="{6f9dbcea-0c63-4113-9b75-feb1528a2499}">
+      <Declaration><![CDATA[METHOD PUBLIC M_newTask : BOOL
+VAR_INPUT
+	Start	:	INT;
+	Ziel	:	INT;
+END_VAR
+VAR
+	
+	Accept : BOOL; // nur test
+	i:INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+FOR i:=1 TO 10 DO
+	IF NOT Auftraege[i].istAktiv THEN
+		Auftraege[i].Startstockwerk := Start;
+		Auftraege[i].Zielstockwerk := Ziel;
+		
+		OrderID_counter.NextfreeOrderID := OrderID_counter.NextfreeOrderID + 1;
+		Auftraege[i].Auftragsnummer := OrderID_counter.NextfreeOrderID;
+		
+		Auftraege[i].istAktiv := TRUE;
+		StartLogik := TRUE;
+		M_newTask := TRUE;
+		
+		EXIT;
+	END_IF
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_TaskDone" Id="{0136c68b-c014-406b-bf9b-10aa4851c70a}">
+      <Declaration><![CDATA[METHOD PUBLIC M_TaskDone : BOOL
+VAR_INPUT
+	
+END_VAR
+VAR_IN_OUT
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

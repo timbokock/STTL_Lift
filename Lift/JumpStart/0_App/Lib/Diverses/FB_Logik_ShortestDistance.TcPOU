@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Logik_ShortestDistance" Id="{fab64295-45fd-49b6-9a64-446951ceeeb8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Logik_ShortestDistance IMPLEMENTS ITF_Fahrlogik
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="M_getNextTask" Id="{31eb2968-912d-4f8c-825d-e5018b0d2b16}">
+      <Declaration><![CDATA[{warning 'Methodenimplementierung hinzufügen'}
+METHOD M_getNextTask : ST_Fahrauftrag
+VAR_INPUT
+	LiftStockwerkAktuell	: INT;
+END_VAR
+VAR_IN_OUT
+	(* Die Liste zum Durchsuchen*)
+	Auftraege	: ARRAY [1..10] OF ST_Fahrauftrag;
+END_VAR
+VAR
+	i : DINT;
+    BestIndex : DINT := 0;
+    shortestDistance  : INT := 1; // Startwert extrem hoch setzen
+    Distance     : INT;
+    Leer       : ST_Fahrauftrag;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+FOR i := 1 TO UPPER_BOUND(Auftraege, 1) DO
+	
+IF Auftraege[i].istAktiv THEN
+	Distance := ABS(Auftraege[i].Startstockwerk - LiftStockwerkAktuell);
+	
+	IF Distance < shortestDistance THEN
+		shortestDistance := Distance;
+		BestIndex := i;
+	END_IF
+END_IF
+END_FOR
+
+IF BestIndex < 0 THEN
+	M_getNextTask := Auftraege[BestIndex];
+ELSE
+	M_getNextTask := Leer;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

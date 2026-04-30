@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Manuell" Id="{feb58f51-1d97-4de3-8234-b5ada0434c31}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Manuell
+VAR_INPUT
+	Control_Manual : BOOL;
+	Control_Reset : BOOL;
+	Control_Start : BOOL;
+	Control_NOTAUS_aktiv : BOOL;
+	Control_Overload : BOOL;
+	Control_Firealarm : BOOL;
+	
+	Lichtschranke1 : BOOL;
+	Lichtschranke2 : BOOL;
+	Lichtschranke3 : BOOL;
+	Lichtschranke4 : BOOL;
+	Lichtschranke5 : BOOL;
+	Lichtschranke6 : BOOL;
+	
+	
+	
+END_VAR
+VAR_OUTPUT
+	LED_Gelb : BOOL;
+	LED_Rot : BOOL;
+	LED_Blau : BOOL;
+	LED_Weiss : BOOL;
+	MotorClose1 : BOOL;
+	MotorClose2 : BOOL;
+	MotorClose3 : BOOL;
+	MotorClose4 : BOOL;
+	MotorClose5 : BOOL;
+	MotorClose6 : BOOL;
+	
+END_VAR
+VAR
+	fbBlinker : FB_Blinker;
+	fbTuer : FB_Tuer;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbBlinker(bEnable:= TRUE, tOn:= T#500MS, tOff:= T#500MS,  );
+
+IF NOT fbTuer.M_AreDoorsClosed() THEN
+	LED_Rot := fbBlinker.bOut;
+	LED_Blau := TRUE;
+ELSE
+	LED_Rot := FALSE;
+	LED_Blau := FALSE;
+END_IF
+
+// IF NOT fbTuer.M_AreDoorsClosed() AND Control_Manual AND Control_Reset AND Lichtschranke1 AND Lichtschranke2 AND Lichtschranke3 AND Lichtschranke4 AND Lichtschranke5 AND Lichtschranke6 THEN
+// 	MotorClose1 := TRUE;
+// 	MotorClose2 := TRUE;
+// 	MotorClose3 := TRUE;
+// 	MotorClose4 := TRUE;
+// 	MotorClose5 := TRUE;
+// 	MotorClose6 := TRUE;
+// ELSE
+// 	MotorClose1 := FALSE;
+// 	MotorClose2 := FALSE;
+// 	MotorClose3 := FALSE;
+// 	MotorClose4 := FALSE;
+// 	MotorClose5 := FALSE;
+// 	MotorClose6 := FALSE;
+// END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -3,51 +3,69 @@
   <POU Name="MAIN" Id="{64cc9234-739d-43ff-b35d-7e9cae01cb71}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	Auftragerstellen : BOOL;
-	Auftraguebergeben : BOOL;
-
-	fcReadPosition : MC_ReadActualPosition;
-	AktuellePosition : LREAL;
-
-	Tuertest : BOOL;
-	Stockwerk : INT;
 	
-	Testauftrag : ST_Fahrauftrag;
-	Fahrtstarten : BOOL;
-	ZielStock : INT;
-	Fahrtzielvertanden : BOOL;
 	fbFahrleitsystem : FB_Fahrleitsystem;
 	fbAchse : FB_Achse;
+	fbManuell : FB_Manuell;
+	fbTuer : FB_Tuer;
+	fbTaskmanager : FB_Taskmanager_1;
+	fbFahrlogikFIFO : FB_Logik_FIFO;
+	fbFahrlogikShortestDistance : FB_Logik_ShortestDistance;
+	fbPanel : FB_Panel ;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
 fbFahrleitsystem();
+fbTaskmanager(
+    fbFahrleitsystem := fbFahrleitsystem,
+    fbFahrlogik := fbFahrlogikFIFO
+);
+
+fbPanel(
+    Panel_1_Btn := IO_L1.Panel_1_Btn,
+    Panel_2_Btn := IO_L1.Panel_2_Btn,
+    Panel_3_Btn := IO_L1.Panel_3_Btn,
+    Panel_4_Btn := IO_L1.Panel_4_Btn,
+    Panel_5_Btn := IO_L1.Panel_5_Btn,
+    Panel_6_Btn := IO_L1.Panel_6_Btn,
+
+    Panel_1_BtnLED => IO_L1.Panel_1_BtnLed,
+    Panel_2_BtnLED => IO_L1.Panel_2_BtnLed,
+    Panel_3_BtnLED => IO_L1.Panel_3_BtnLed,
+    Panel_4_BtnLED => IO_L1.Panel_4_BtnLed,
+    Panel_5_BtnLED => IO_L1.Panel_5_BtnLed,
+    Panel_6_BtnLED => IO_L1.Panel_6_BtnLed,
+
+    Panel_1_Led_Up => IO_L1.Panel_1_Led_Up,
+    Panel_1_Led_Down => IO_L1.Panel_1_Led_Down,
+
+    Panel_2_Led_Up => IO_L1.Panel_2_Led_Up,
+    Panel_2_Led_Down => IO_L1.Panel_2_Led_Down,
+
+    Panel_3_Led_Up => IO_L1.Panel_3_Led_Up,
+    Panel_3_Led_Down => IO_L1.Panel_3_Led_Down,
+
+    Panel_4_Led_Up => IO_L1.Panel_4_Led_Up,
+    Panel_4_Led_Down => IO_L1.Panel_4_Led_Down,
+
+    Panel_5_Led_Up => IO_L1.Panel_5_Led_Up,
+    Panel_5_Led_Down => IO_L1.Panel_5_Led_Down,
+
+    Panel_6_Led_Up => IO_L1.Panel_6_Led_Up,
+    Panel_6_Led_Down => IO_L1.Panel_6_Led_Down,
+
+    Panel_1_BCD_Bit => IO_L1.Panel_1_BCD_Bit,
+    Panel_2_BCD_Bit => IO_L1.Panel_2_BCD_Bit,
+    Panel_3_BCD_Bit => IO_L1.Panel_3_BCD_Bit,
+    Panel_4_BCD_Bit => IO_L1.Panel_4_BCD_Bit,
+    Panel_5_BCD_Bit => IO_L1.Panel_5_BCD_Bit,
+    Panel_6_BCD_Bit => IO_L1.Panel_6_BCD_Bit,
+
+);
 
 
-(*
-	Main Template
-	-------------
-	
-	This Project serves as start to build an own Lift System.
-	
-	Content:
-		- Main -> Main Entry Point for your application
-		- Main_Modell -> Process model for inhouse development
-		
-	Task call order with model:
-		- Main_Modell
-		- Main
 
-	Remark for real Model:
-		- Enable I/O Devices
-		- Remove Main_Modell
-		- Deactivate "Simulation Mode" on 'Achse 1'
-		- Activate Project and login
-
-
-	Here starts your Code! Have Fun!!!
-*)
 ]]></ST>
     </Implementation>
   </POU>
