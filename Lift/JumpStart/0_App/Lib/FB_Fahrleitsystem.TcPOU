@@ -23,6 +23,7 @@ VAR
 	State: ENUM_Fahrsystem;
 	fbTuer : FB_Tuer;
 	fbAchse : FB_Achse;
+	AbholungFertig : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -93,7 +94,13 @@ CASE State OF
 		IF NOT Tuerauftragverstanden AND NOT fbAchse.M_isBusy() AND NOT fbAchse.M_hasError()THEN
 			Tuerauftragverstanden := fbTuer.M_Tuerablaufstarten(AktuellesStockwerk);
 		END_IF
+		IF fbTuer.M_DoorOpen() THEN
+			AbholungFertig := TRUE;
+		ELSE 
+			AbholungFertig := FALSE;
+		END_IF
 		IF fbTuer.M_isDone() THEN
+			AbholungFertig := FALSE;
 			Tuerauftragverstanden := FALSE;
 			IF AmStartStockwerk THEN
 				State := ENUM_Fahrsystem.ZumZielStockwerk;
@@ -124,6 +131,19 @@ CASE State OF
 END_CASE
 ]]></ST>
     </Implementation>
+    <Method Name="M_AbholungFertig" Id="{d534390c-596d-410a-950e-73e20c0959ce}">
+      <Declaration><![CDATA[METHOD PUBLIC M_AbholungFertig : INT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF AbholungFertig THEN
+	M_AbholungFertig := ZielStockwerk;
+ELSE
+	M_AbholungFertig := -1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_AcceptTask" Id="{d5baa6a5-1e56-45e8-ab59-264b78e34233}">
       <Declaration><![CDATA[METHOD PUBLIC M_AcceptTask : BOOL
 VAR_INPUT

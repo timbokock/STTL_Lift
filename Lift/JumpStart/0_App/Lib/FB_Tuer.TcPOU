@@ -50,7 +50,7 @@ VAR
 	ton4 : TON;
 	ton5 : TON;
 	ton6 : TON;
-	
+	Tueroffen : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -187,7 +187,7 @@ CASE State OF
 
 
     ENUM_Tuer.TuereAuf:
-
+		
         // 2 Sekunden offen warten
         IF Stockwerk = 1 AND ton1.Q THEN
             State := ENUM_Tuer.TuereSchliessen;
@@ -333,6 +333,20 @@ END_VAR
 	M_AreDoorsClosed := TRUE;
 ELSE
 	M_AreDoorsClosed := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_DoorOpen" Id="{a81e80dc-9065-490b-b6a8-8ed585863b63}">
+      <Declaration><![CDATA[METHOD PUBLIC M_DoorOpen : BOOL
+VAR_INPUT
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Tueroffen THEN
+	M_DoorOpen := TRUE;
+ELSE
+	M_DoorOpen := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>

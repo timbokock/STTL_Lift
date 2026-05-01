@@ -1001,7 +1001,7 @@ External Setpoint Generation:
 		</DataType>
 	</DataTypes>
 	<Project GUID="{5BA8E00E-12B0-4AA4-A440-B8CEB1C87063}" Name="JumpStart" PrjFilePath="..\..\JumpStart\JumpStart.plcproj" TmcFilePath="..\..\JumpStart\JumpStart.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{14AA20B3-2C62-4861-3B12-037438143876}" TmcPath="JumpStart\JumpStart.tmc">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{39A350DA-6463-F66A-56C7-07262094778A}" TmcPath="JumpStart\JumpStart.tmc">
 			<Name>JumpStart Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="2" AreaNo="1">
@@ -1017,15 +1017,6 @@ External Setpoint Generation:
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>IO_L1.LiftAxis.PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>IO_L1.Panel_1_BtnLed</Name>
-					<Comment><![CDATA[ Panel Level 1 - Button LEDs]]></Comment>
-					<Type GUID="{91952434-3B1E-48FD-FCD9-909033EAF991}">ARRAY [1..6] OF BOOL</Type>
-				</Var>
-				<Var>
 					<Name>IO_L1.Panel_1_Led_Up</Name>
 					<Comment><![CDATA[ Panel Level 1 - Led Up]]></Comment>
 					<Type>BOOL</Type>
@@ -1034,6 +1025,15 @@ External Setpoint Generation:
 					<Name>IO_L1.Panel_1_Led_Down</Name>
 					<Comment><![CDATA[ Panel Level 1 - Led Down]]></Comment>
 					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>IO_L1.LiftAxis.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>IO_L1.Panel_1_BtnLed</Name>
+					<Comment><![CDATA[ Panel Level 1 - Button LEDs]]></Comment>
+					<Type GUID="{91952434-3B1E-48FD-FCD9-909033EAF991}">ARRAY [1..6] OF BOOL</Type>
 				</Var>
 				<Var>
 					<Name>IO_L1.Panel_1_BCD_Bit</Name>
@@ -1241,15 +1241,6 @@ External Setpoint Generation:
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>IO_L1.LiftAxis.NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>IO_L1.Panel_1_Btn</Name>
-					<Comment><![CDATA[ Panel Level 1 - Buttons]]></Comment>
-					<Type GUID="{91952434-3B1E-48FD-FCD9-909033EAF991}">ARRAY [1..6] OF BOOL</Type>
-				</Var>
-				<Var>
 					<Name>IO_L1.Door_2_SensorOpen</Name>
 					<Comment><![CDATA[ Door level 2 open]]></Comment>
 					<Type>BOOL</Type>
@@ -1263,6 +1254,15 @@ External Setpoint Generation:
 					<Name>IO_L1.Door_2_SensorActive</Name>
 					<Comment><![CDATA[ Door level 2 sensor active]]></Comment>
 					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>IO_L1.LiftAxis.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>IO_L1.Panel_1_Btn</Name>
+					<Comment><![CDATA[ Panel Level 1 - Buttons]]></Comment>
+					<Type GUID="{91952434-3B1E-48FD-FCD9-909033EAF991}">ARRAY [1..6] OF BOOL</Type>
 				</Var>
 				<Var>
 					<Name>IO_L1.Panel_2_Btn</Name>

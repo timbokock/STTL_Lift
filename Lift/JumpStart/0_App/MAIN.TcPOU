@@ -12,17 +12,11 @@ VAR
 	fbFahrlogikFIFO : FB_Logik_FIFO;
 	fbFahrlogikShortestDistance : FB_Logik_ShortestDistance;
 	fbPanel : FB_Panel ;
+	LED_Loeschen_verstanden : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-fbFahrleitsystem();
-fbTaskmanager(
-    fbFahrleitsystem := fbFahrleitsystem,
-    fbFahrlogik := fbFahrlogikFIFO
-);
-
-fbPanel(
+      <ST><![CDATA[fbPanel(
     Panel_1_Btn := IO_L1.Panel_1_Btn,
     Panel_2_Btn := IO_L1.Panel_2_Btn,
     Panel_3_Btn := IO_L1.Panel_3_Btn,
@@ -39,19 +33,14 @@ fbPanel(
 
     Panel_1_Led_Up => IO_L1.Panel_1_Led_Up,
     Panel_1_Led_Down => IO_L1.Panel_1_Led_Down,
-
     Panel_2_Led_Up => IO_L1.Panel_2_Led_Up,
     Panel_2_Led_Down => IO_L1.Panel_2_Led_Down,
-
     Panel_3_Led_Up => IO_L1.Panel_3_Led_Up,
     Panel_3_Led_Down => IO_L1.Panel_3_Led_Down,
-
     Panel_4_Led_Up => IO_L1.Panel_4_Led_Up,
     Panel_4_Led_Down => IO_L1.Panel_4_Led_Down,
-
     Panel_5_Led_Up => IO_L1.Panel_5_Led_Up,
     Panel_5_Led_Down => IO_L1.Panel_5_Led_Down,
-
     Panel_6_Led_Up => IO_L1.Panel_6_Led_Up,
     Panel_6_Led_Down => IO_L1.Panel_6_Led_Down,
 
@@ -62,8 +51,19 @@ fbPanel(
     Panel_5_BCD_Bit => IO_L1.Panel_5_BCD_Bit,
     Panel_6_BCD_Bit => IO_L1.Panel_6_BCD_Bit,
 
+    fbTaskManager := fbTaskmanager
 );
 
+fbTaskmanager(
+    fbFahrleitsystem := fbFahrleitsystem,
+    fbFahrlogik := fbFahrlogikFIFO
+);
+
+fbFahrleitsystem();
+
+IF fbFahrleitsystem.M_AbholungFertig() > (-1) THEN
+	LED_Loeschen_verstanden := fbPanel.M_TurnofLED(fbFahrleitsystem.M_AbholungFertig());
+END_IF
 
 
 ]]></ST>

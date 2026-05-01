@@ -43,12 +43,10 @@ VAR_OUTPUT
 	Panel_6_BCD_Bit : ARRAY[0..3] OF BOOL;
 END_VAR
 VAR_IN_OUT
-	
+	fbTaskManager : FB_Taskmanager_1;
 	
 END_VAR
 VAR
-fbTaskManager : FB_Taskmanager_1;
-
 Panel_Btn : ARRAY[1..6] OF ARRAY [1..6] OF BOOL;
 TrigBtn : ARRAY[1..6] OF ARRAY [1..6] OF R_TRIG;
 
@@ -63,6 +61,10 @@ Panel_LED_Down:	ARRAY[1..6] OF BOOL;
 
 //7-Segment
 Panel_BCD	:	ARRAY[1..6] OF ARRAY[0..3] OF BOOL;
+
+//LED's löschen
+PanelLED_loeschen : INT;
+LED_loeschen : BOOL;
 
 END_VAR
 ]]></Declaration>
@@ -84,12 +86,12 @@ FOR meinStockwerk := 1 TO 6 DO
 				
 				IF AuftragAngenommen THEN
                 Panel_LEDs[meinStockwerk][meinZiel] := TRUE;
-				IF meinStockwerk < meinZiel THEN
-					Panel_LED_UP[meinStockwerk] := TRUE;
-				END_IF
-				IF meinStockwerk > meinZiel THEN
-					Panel_LED_Down[meinStockwerk] := TRUE;
-				END_IF
+					IF meinStockwerk < meinZiel THEN
+						Panel_LED_UP[meinStockwerk] := TRUE;
+					END_IF
+					IF meinStockwerk > meinZiel THEN
+						Panel_LED_Down[meinStockwerk] := TRUE;
+					END_IF
 				
 				//BCD
 				Panel_BCD[meinStockwerk][0] := meinZiel.0; // Bit 0 (Wertigkeit 1)
@@ -103,6 +105,11 @@ FOR meinStockwerk := 1 TO 6 DO
         END_IF
 	END_FOR
 END_FOR
+//LED's zurücksetzen
+IF LED_loeschen THEN
+	Panel_LEDs[OrderID_Counter.AktuellesStockwerk][PanelLED_loeschen] := FALSE;
+	LED_loeschen := FALSE;
+END_IF
 
 //Stockwerk LEDs
 Panel_1_BtnLED := Panel_LEDs[1];
@@ -138,5 +145,17 @@ Panel_6_BCD_Bit := Panel_BCD[6];
 
 ]]></ST>
     </Implementation>
+    <Method Name="M_TurnofLED" Id="{fc51c5fc-a511-4cb3-97d3-3731850746da}">
+      <Declaration><![CDATA[METHOD PUBLIC M_TurnofLED : BOOL
+VAR_INPUT
+	Stockwerk_LED_Loeschen : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[PanelLED_loeschen := Stockwerk_LED_Loeschen; 
+LED_loeschen := TRUE;
+M_TurnofLED := TRUE;]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>
