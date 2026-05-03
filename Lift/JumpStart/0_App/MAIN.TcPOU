@@ -61,6 +61,8 @@ fbTaskmanager(
 
 fbFahrleitsystem();
 
+
+//LED Löschen
 IF fbFahrleitsystem.M_AbholungFertig() > (-1) THEN
 	LED_Loeschen_verstanden := fbPanel.M_TurnofLED(fbFahrleitsystem.M_AbholungFertig());
 END_IF

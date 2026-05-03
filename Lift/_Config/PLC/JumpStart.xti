@@ -1001,7 +1001,7 @@ External Setpoint Generation:
 		</DataType>
 	</DataTypes>
 	<Project GUID="{5BA8E00E-12B0-4AA4-A440-B8CEB1C87063}" Name="JumpStart" PrjFilePath="..\..\JumpStart\JumpStart.plcproj" TmcFilePath="..\..\JumpStart\JumpStart.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{39A350DA-6463-F66A-56C7-07262094778A}" TmcPath="JumpStart\JumpStart.tmc">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{2816308C-599A-E12D-91A6-AE0392EFE60E}" TmcPath="JumpStart\JumpStart.tmc">
 			<Name>JumpStart Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="2" AreaNo="1">

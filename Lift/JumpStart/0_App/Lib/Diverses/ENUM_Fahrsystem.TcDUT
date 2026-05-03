@@ -10,7 +10,8 @@ TYPE ENUM_Fahrsystem :
 	Sicherheitscheck := 1,
 	ZumStartStockwerk := 2,
 	Tueren := 3,
-	ZumZielStockwerk := 4
+	ZumZielStockwerk := 4,
+	Aufstartablauf := 5
 );
 END_TYPE
 ]]></Declaration>

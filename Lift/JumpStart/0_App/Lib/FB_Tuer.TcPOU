@@ -130,7 +130,7 @@ CASE State OF
 
 
     ENUM_Tuer.TuereOeffnen:
-
+		Tueroffen := TRUE;
         IF Stockwerk = 1 THEN
             IF NOT SensorOpen1 THEN
                 MotorOpen1 := TRUE;
@@ -187,7 +187,7 @@ CASE State OF
 
 
     ENUM_Tuer.TuereAuf:
-		
+		Tueroffen := FALSE;
         // 2 Sekunden offen warten
         IF Stockwerk = 1 AND ton1.Q THEN
             State := ENUM_Tuer.TuereSchliessen;
@@ -334,6 +334,108 @@ END_VAR
 ELSE
 	M_AreDoorsClosed := FALSE;
 END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_closeAllDoors" Id="{76e9d497-3022-48bc-94a5-209742ec32d4}">
+      <Declaration><![CDATA[METHOD PUBLIC M_closeAllDoors : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	Tuer1zu : BOOL;
+	Tuer2zu : BOOL;
+	Tuer3zu : BOOL;
+	Tuer4zu : BOOL;
+	Tuer5zu : BOOL;
+	Tuer6zu : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+            IF NOT Lichtschranke1 THEN
+                // Hindernis erkannt -> wieder öffnen
+                MotorClose1 := FALSE;
+         
+
+            ELSIF NOT SensorClosed1 THEN
+                MotorClose1 := TRUE;
+				Tuer1zu := FALSE;
+            ELSE
+                MotorClose1 := FALSE;
+                Tuer1zu := TRUE;
+            END_IF
+       
+
+
+            IF NOT Lichtschranke2 THEN
+                // Hindernis erkannt -> wieder öffnen
+                MotorClose2 := FALSE;
+            ELSIF NOT SensorClosed2 THEN
+                MotorClose2 := TRUE;
+				Tuer2zu := FALSE;
+            ELSE
+                MotorClose2 := FALSE;
+               	Tuer2zu := TRUE;
+            END_IF
+       
+
+  
+            IF NOT Lichtschranke3 THEN
+                // Hindernis erkannt -> wieder öffnen
+                MotorClose3 := FALSE;
+           ELSIF NOT SensorClosed3 THEN
+                MotorClose3 := TRUE;
+				Tuer3zu := FALSE;
+            ELSE
+                MotorClose3 := FALSE;
+               	Tuer3zu := TRUE;
+            END_IF
+      
+
+    
+            IF NOT Lichtschranke4 THEN
+                // Hindernis erkannt -> wieder öffnen
+                MotorClose4 := FALSE;
+              
+            ELSIF NOT SensorClosed4 THEN
+                MotorClose4 := TRUE;
+				Tuer4zu := FALSE;
+            ELSE
+                MotorClose4 := FALSE;
+                Tuer4zu := TRUE;
+            END_IF
+
+       
+            IF NOT Lichtschranke5 THEN
+                // Hindernis erkannt -> wieder öffnen
+
+            ELSIF NOT SensorClosed5 THEN
+                MotorClose5 := TRUE;
+				Tuer5zu := FALSE;
+            ELSE
+                MotorClose5 := FALSE;
+				Tuer5zu := TRUE;
+            END_IF
+
+
+  
+            IF NOT Lichtschranke6 THEN
+                // Hindernis erkannt -> wieder öffnen
+                MotorClose6 := FALSE;
+              	Tuer6zu := FALSE;
+            ELSIF NOT SensorClosed6 THEN
+                MotorClose6 := TRUE;
+
+            ELSE
+                MotorClose6 := FALSE;
+                Tuer6zu := TRUE;
+            END_IF
+      
+		IF Tuer1zu AND Tuer2zu AND Tuer3zu AND Tuer4zu AND Tuer5zu AND Tuer6zu THEN
+		  	M_closeAllDoors := TRUE;
+		ELSE 
+			M_closeAllDoors := FALSE;
+		END_IF
+		
+	]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_DoorOpen" Id="{a81e80dc-9065-490b-b6a8-8ed585863b63}">

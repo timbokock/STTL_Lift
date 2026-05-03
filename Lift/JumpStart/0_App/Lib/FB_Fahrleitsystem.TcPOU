@@ -24,6 +24,10 @@ VAR
 	fbTuer : FB_Tuer;
 	fbAchse : FB_Achse;
 	AbholungFertig : BOOL;
+	Closingdoors: BOOL;
+	Achsereferenziert: BOOL;
+	AufstartenAbgeschlossen : BOOL;
+	AufstartenFreigabe : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -69,6 +73,9 @@ Done := FALSE;
 CASE State OF
 	
 	ENUM_Fahrsystem.Warten:
+		IF NOT 	AufstartenAbgeschlossen  THEN
+			State := ENUM_Fahrsystem.Aufstartablauf;
+		END_IF
 		IF Start THEN
 			Busy := FALSE;
 			Done := FALSE;
@@ -128,6 +135,25 @@ CASE State OF
 			AmZielStockwerk := TRUE;
 			State := ENUM_Fahrsystem.Tueren;
 		END_IF
+	
+	ENUM_Fahrsystem.Aufstartablauf: 
+		AufstartenFreigabe := IO_L1.Control_Start;
+		IF AufstartenFreigabe THEN
+	
+			IF NOT fbTuer.M_AreDoorsClosed() THEN
+				Closingdoors := fbTuer.M_closeAllDoors();
+			END_IF
+			IF fbTuer.M_AreDoorsClosed() THEN
+				Achsereferenziert := fbAchse.M_Referenzieren();
+				IF fbAchse.M_isDone() THEN
+					AufstartenAbgeschlossen := TRUE;
+					AufstartenFreigabe := FALSE;
+					State := ENUM_Fahrsystem.Warten;
+				END_IF
+			END_IF
+				
+		END_IF
+		
 END_CASE
 ]]></ST>
     </Implementation>

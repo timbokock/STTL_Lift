@@ -5,7 +5,7 @@
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"3"</v>
+          <v n="UniqueIdGenerator">"6"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" />
             <v n="BackgroundBitmapId">""</v>
@@ -19,11 +19,13 @@
               <v n="BgUseColor">16777215</v>
               <v n="BgUseGradient">false</v>
             </o>
-            <v n="AllElementsHaveDynamicVisibility">false</v>
+            <v n="AllElementsHaveDynamicVisibility">true</v>
           </o>
           <o n="GeneratedLMMDescriptions" t="GeneratedLanguageModelEntriesData">
             <o n="GeneratedVisuFbDescription" t="GenericFbDescription">
               <d n="FbMethods" t="CaseInsensitiveHashtable" ckt="String" cvt="Guid">
+                <v>AreAllElementsHidden</v>
+                <v>e009826f-bdf7-5405-9ecf-b80158da9acf</v>
                 <v>ContainsPoint</v>
                 <v>2ff986d4-b432-4ee7-9c56-af5bd2374408</v>
                 <v>Destruct</v>
@@ -34,6 +36,8 @@
                 <v>5952d7e3-5a08-4441-addb-20fa18f7e612</v>
                 <v>FB_Reinit</v>
                 <v>342f7e12-460f-4891-a473-3e3d72a9ae16</v>
+                <v>GetCallerNamespace</v>
+                <v>80bd41a1-5d79-583f-b332-677b937a44c4</v>
                 <v>GetClientData</v>
                 <v>fb8c0b98-02cd-445e-8fd3-d7805f58b222</v>
                 <v>GetDialogInterface</v>
@@ -44,6 +48,8 @@
                 <v>c3171784-33c7-4f38-8439-49dabdef18eb</v>
                 <v>GetElementIdArray</v>
                 <v>57bfe2ea-b180-4fc9-a361-c5591f3a9ca9</v>
+                <v>GetElementName</v>
+                <v>8d0aadd4-9843-522a-8d1f-db8c31a8b028</v>
                 <v>GetInitializeVersion</v>
                 <v>788db2b1-8deb-4501-8d2f-d3b357f5ebb8</v>
                 <v>GetInstance</v>
@@ -60,6 +66,8 @@
                 <v>a2052454-8f1f-4d27-9927-f7a7e15fdd82</v>
                 <v>GetSurroundingRect</v>
                 <v>35127ae1-cc8f-4803-81d1-d367ee5527a7</v>
+                <v>GetTabOrderIdArray</v>
+                <v>39e5beaf-be22-5b43-8c36-3c8b20eaa421</v>
                 <v>GetText</v>
                 <v>e94303cc-d187-49cc-9a49-ffc93946e5c7</v>
                 <v>GetTextProperties</v>
@@ -74,8 +82,12 @@
                 <v>b9bc6d0a-5947-4f27-ae8d-a04db2277382</v>
                 <v>HasInputAccess</v>
                 <v>0e09e5ce-32cf-4b0b-aef0-c6eb6c23ac2c</v>
+                <v>HasInputAccessIntern</v>
+                <v>0aa88e18-7d6e-5776-a1a4-602ccd88a580</v>
                 <v>HasVisibilityAccess</v>
                 <v>1763eb45-9d40-428e-ace8-9d54636cf93a</v>
+                <v>HasVisibilityAccessIntern</v>
+                <v>4b26b517-df38-5777-bb62-d9242a00918e</v>
                 <v>Initialize</v>
                 <v>6da1bb29-bae8-4600-8b98-8dfb59c2496a</v>
                 <v>IsAntialiasingInactive</v>
@@ -84,6 +96,8 @@
                 <v>5a24bfcd-b066-4e1a-a754-1808a7db3bed</v>
                 <v>SetClientData</v>
                 <v>7fb65810-1d5e-46e9-a156-49b978c211bd</v>
+                <v>SetContainerSize</v>
+                <v>a4ccc870-13e9-5c90-80d7-3c19672b16f6</v>
                 <v>SetDialogInterface</v>
                 <v>9bb6dc63-ac1b-4bf3-a866-a30bdbbc592b</v>
                 <v>SetResult</v>
@@ -163,7 +177,7 @@
             </o>
             <v n="DialogDut">{9e013b56-69a0-49bb-9d25-cbff55621be3}</v>
           </o>
-          <v n="LastUsedIdForIdentifier">0</v>
+          <v n="LastUsedIdForIdentifier">1</v>
           <o n="TextDocument" t="TextDocument">
             <v n="TextBlobForSerialisation">"VAR_IN_OUT
 	
@@ -184,7 +198,23 @@ END_VAR"</v>
             <l2 n="Inputs" />
           </o>
           <o n="VisuSizeManager" t="VisualObjectSizeManager">
-            <n n="Size" />
+            <d2 n="Size" ckt="Int32" cvt="VisualObjectSize">
+              <v>0</v>
+              <o>
+                <v n="Width">0</v>
+                <v n="Height">0</v>
+              </o>
+              <v>1</v>
+              <o>
+                <v n="Width">0</v>
+                <v n="Height">0</v>
+              </o>
+              <v>2</v>
+              <o>
+                <v n="Width">0</v>
+                <v n="Height">0</v>
+              </o>
+            </d2>
             <v n="Version">2</v>
           </o>
           <n n="FrameInterfaceDataModel" />
@@ -206,6 +236,7 @@ END_VAR"</v>
         <Type n="VisualElemCollection">{ef9d0b20-c96e-48db-b361-2ded4063150e}</Type>
         <Type n="VisualElemList">{f285c9a3-7019-446b-b98c-ccec3a0af8fa}</Type>
         <Type n="VisualObject">{f18bec89-9fef-401d-9953-2f11739a6808}</Type>
+        <Type n="VisualObjectSize">{6ad3e88f-aee2-4766-a7ea-a8790037ef51}</Type>
         <Type n="VisualObjectSizeManager">{5f612b0e-b404-455f-8177-27864e9f5332}</Type>
       </TypeList>
     </XmlArchive>
