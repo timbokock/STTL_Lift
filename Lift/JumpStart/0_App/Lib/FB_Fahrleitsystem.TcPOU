@@ -73,9 +73,9 @@ Done := FALSE;
 CASE State OF
 	
 	ENUM_Fahrsystem.Warten:
-		IF NOT 	AufstartenAbgeschlossen  THEN
-			State := ENUM_Fahrsystem.Aufstartablauf;
-		END_IF
+	//	IF NOT 	AufstartenAbgeschlossen  THEN
+		//	State := ENUM_Fahrsystem.Aufstartablauf;
+		//END_IF
 		IF Start THEN
 			Busy := FALSE;
 			Done := FALSE;
@@ -98,6 +98,7 @@ CASE State OF
 		END_IF
 		
 	ENUM_Fahrsystem.Tueren:
+			
 		IF NOT Tuerauftragverstanden AND NOT fbAchse.M_isBusy() AND NOT fbAchse.M_hasError()THEN
 			Tuerauftragverstanden := fbTuer.M_Tuerablaufstarten(AktuellesStockwerk);
 		END_IF
@@ -121,7 +122,7 @@ CASE State OF
 		AmZielStockwerk := FALSE;
 		Fahrauftragverstanden := fbAchse.M_Movetoposition(StartStockwerk);
 		IF fbAchse.M_isDone() THEN
-			OrderID_Counter.AktuellesStockwerk := StartStockwerk;
+			//OrderID_Counter.AktuellesStockwerk := StartStockwerk;
 			AktuellesStockwerk := StartStockwerk;
 			AmStartStockwerk := TRUE;
 			State := ENUM_Fahrsystem.Tueren;
@@ -130,7 +131,7 @@ CASE State OF
 		AmStartStockwerk := FALSE;
 		Fahrauftragverstanden := fbAchse.M_Movetoposition(ZielStockwerk);
 		IF fbAchse.M_isDone() THEN
-			OrderID_Counter.AktuellesStockwerk := ZielStockwerk;
+			//OrderID_Counter.AktuellesStockwerk := ZielStockwerk;
 			AktuellesStockwerk := ZielStockwerk;
 			AmZielStockwerk := TRUE;
 			State := ENUM_Fahrsystem.Tueren;

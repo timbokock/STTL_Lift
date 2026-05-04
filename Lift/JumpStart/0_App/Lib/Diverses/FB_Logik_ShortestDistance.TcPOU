@@ -25,7 +25,7 @@ END_VAR
 VAR
 	i : DINT;
     BestIndex : DINT := 0;
-    shortestDistance  : INT := 1; // Startwert extrem hoch setzen
+    shortestDistance  : INT := 100; // Startwert extrem hoch setzen
     Distance     : INT;
     Leer       : ST_Fahrauftrag;
 END_VAR]]></Declaration>
@@ -34,7 +34,7 @@ END_VAR]]></Declaration>
 FOR i := 1 TO UPPER_BOUND(Auftraege, 1) DO
 	
 IF Auftraege[i].istAktiv THEN
-	Distance := ABS(Auftraege[i].Startstockwerk - LiftStockwerkAktuell);
+	Distance := ABS(Auftraege[i].Startstockwerk - OrderID_Counter.AktuellesStockwerk);
 	
 	IF Distance < shortestDistance THEN
 		shortestDistance := Distance;
@@ -43,7 +43,7 @@ IF Auftraege[i].istAktiv THEN
 END_IF
 END_FOR
 
-IF BestIndex < 0 THEN
+IF BestIndex > 0 THEN
 	M_getNextTask := Auftraege[BestIndex];
 ELSE
 	M_getNextTask := Leer;

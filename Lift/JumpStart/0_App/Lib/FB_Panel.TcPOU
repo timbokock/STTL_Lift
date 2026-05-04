@@ -108,6 +108,12 @@ END_FOR
 //LED's zurücksetzen
 IF LED_loeschen THEN
 	Panel_LEDs[OrderID_Counter.AktuellesStockwerk][PanelLED_loeschen] := FALSE;
+	Panel_LED_UP[OrderID_Counter.AktuellesStockwerk] := FALSE;
+	panel_LED_DOWN[OrderID_Counter.AktuellesStockwerk] := FALSE;
+	Panel_BCD[OrderID_Counter.AktuellesStockwerk][0] := 0;
+	Panel_BCD[OrderID_Counter.AktuellesStockwerk][1] := 0;
+	Panel_BCD[OrderID_Counter.AktuellesStockwerk][2] := 0;
+	Panel_BCD[OrderID_Counter.AktuellesStockwerk][3] := 0;
 	LED_loeschen := FALSE;
 END_IF
 
@@ -152,7 +158,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[PanelLED_loeschen := Stockwerk_LED_Loeschen; 
+        <ST><![CDATA[PanelLED_loeschen := Stockwerk_LED_Loeschen; //PanelLED_loeschen = Knopf 1-6, von dem LEDs gelöscht werden sollen
 LED_loeschen := TRUE;
 M_TurnofLED := TRUE;]]></ST>
       </Implementation>

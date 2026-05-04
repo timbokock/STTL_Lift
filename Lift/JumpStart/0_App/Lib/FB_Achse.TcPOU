@@ -33,6 +33,7 @@ VAR
     fbStop     : MC_Stop;
     fbReset    : MC_Reset;
 	AchseReferenzieren : BOOL;
+	s_Zielstock : INT;
 
 END_VAR
 VAR_IN_OUT
@@ -136,6 +137,7 @@ CASE State OF
 			 
 		MoveAbsExecute := FALSE;
 		IF fbMoveAbs.Done THEN
+			OrderID_Counter.AktuellesStockwerk := s_Zielstock;
 			Done := TRUE;
 			Busy := FALSE;
 			State := ENUM_Achse.Warten;
@@ -255,6 +257,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF NOT Busy AND NOT Error THEN
 	Zielposition := FC_GetFloorPosition(ZielStock);
+	s_Zielstock := ZielStock;
 	Start := TRUE;
 	M_Movetoposition := TRUE; //Rückgabewert
 ELSE

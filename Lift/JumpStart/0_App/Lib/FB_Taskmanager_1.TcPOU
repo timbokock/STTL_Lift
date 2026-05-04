@@ -23,7 +23,11 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[Case State Of
+      <ST><![CDATA[IF Auftraege[1].istAktiv AND NOT fbFahrleitsystem.M_isBusy() THEN
+	StartLogik := TRUE;
+END_IF
+
+Case State Of
 	
 00: //Warten
 IF StartLogik THEN
