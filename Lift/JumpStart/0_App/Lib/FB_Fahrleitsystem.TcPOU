@@ -28,6 +28,8 @@ VAR
 	Achsereferenziert: BOOL;
 	AufstartenAbgeschlossen : BOOL;
 	AufstartenFreigabe : BOOL;
+	AllDoorsClosed : BOOL;
+	fbBlinker : FB_Blinker;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -66,19 +68,25 @@ fbTuer(
     MotorClose3 => IO_L1.Door_3_MotorClose,
     MotorClose4 => IO_L1.Door_4_MotorClose,
     MotorClose5 => IO_L1.Door_5_MotorClose,
-    MotorClose6 => IO_L1.Door_6_MotorClose
+    MotorClose6 => IO_L1.Door_6_MotorClose,
+	AllDoorsClosed => AllDoorsClosed
 );
+
+fbBlinker(bEnable:= TRUE, tOn:= T#500MS, tOff:=T#500MS , bOut=> );
 SicherheitsCheckbestanden := FALSE;
 Done := FALSE;
 CASE State OF
-	
+
+
 	ENUM_Fahrsystem.Warten:
-	//	IF NOT 	AufstartenAbgeschlossen  THEN
-		//	State := ENUM_Fahrsystem.Aufstartablauf;
-		//END_IF
-		IF Start THEN
-			Busy := FALSE;
-			Done := FALSE;
+		Busy := FALSE;
+		Done := FALSE;
+		IF NOT 	AufstartenAbgeschlossen  AND IO_L1.Control_Automatic THEN
+			Busy := TRUE;
+			State := ENUM_Fahrsystem.Aufstartablauf;
+		END_IF
+		IF Start AND IO_L1.Control_Automatic THEN
+			Busy := TRUE;
 			Start := FALSE;
 			State := ENUM_Fahrsystem.Sicherheitscheck;
 		END_IF
@@ -98,7 +106,7 @@ CASE State OF
 		END_IF
 		
 	ENUM_Fahrsystem.Tueren:
-			
+		Busy := TRUE;	
 		IF NOT Tuerauftragverstanden AND NOT fbAchse.M_isBusy() AND NOT fbAchse.M_hasError()THEN
 			Tuerauftragverstanden := fbTuer.M_Tuerablaufstarten(AktuellesStockwerk);
 		END_IF
@@ -119,6 +127,7 @@ CASE State OF
 			END_IF
 		END_IF
 	ENUM_Fahrsystem.ZumStartStockwerk:
+		Busy := TRUE;
 		AmZielStockwerk := FALSE;
 		Fahrauftragverstanden := fbAchse.M_Movetoposition(StartStockwerk);
 		IF fbAchse.M_isDone() THEN
@@ -128,6 +137,7 @@ CASE State OF
 			State := ENUM_Fahrsystem.Tueren;
 		END_IF
 	ENUM_Fahrsystem.ZumZielStockwerk:
+		Busy := TRUE;
 		AmStartStockwerk := FALSE;
 		Fahrauftragverstanden := fbAchse.M_Movetoposition(ZielStockwerk);
 		IF fbAchse.M_isDone() THEN
@@ -138,24 +148,48 @@ CASE State OF
 		END_IF
 	
 	ENUM_Fahrsystem.Aufstartablauf: 
-		AufstartenFreigabe := IO_L1.Control_Start;
+	Busy := TRUE;
+	IF IO_L1.Control_Start THEN
+		AufstartenFreigabe := TRUE;
+	END_IF
 		IF AufstartenFreigabe THEN
 	
-			IF NOT fbTuer.M_AreDoorsClosed() THEN
+			IF NOT AllDoorsClosed THEN
+				IO_L1.Control_LED_White := TRUE;
 				Closingdoors := fbTuer.M_closeAllDoors();
 			END_IF
-			IF fbTuer.M_AreDoorsClosed() THEN
-				Achsereferenziert := fbAchse.M_Referenzieren();
-				IF fbAchse.M_isDone() THEN
-					AufstartenAbgeschlossen := TRUE;
-					AufstartenFreigabe := FALSE;
-					State := ENUM_Fahrsystem.Warten;
+			IF AllDoorsClosed THEN
+				IO_L1.Control_LED_Red := TRUE;
+				Achsereferenziert := fbAchse.M_Movetoposition(1);
+					IF fbAchse.M_isDone() THEN
+						AktuellesStockwerk := 1;
+						AufstartenAbgeschlossen := TRUE;
+						AufstartenFreigabe := FALSE;
+						State := ENUM_Fahrsystem.Warten;
 				END_IF
 			END_IF
-				
+			
 		END_IF
 		
 END_CASE
+IF IO_L1.Control_Automatic AND AufstartenAbgeschlossen THEN
+    // Anlage läuft (mit oder ohne Auftrag) → dauernd an
+    IO_L1.Control_LED_White := TRUE;
+
+ELSIF IO_L1.Control_Automatic AND NOT AufstartenAbgeschlossen THEN
+    // Aufstartablauf → blinken
+    IO_L1.Control_LED_White := fbBlinker.bOut;
+
+ELSIF NOT IO_L1.Control_Automatic AND Busy THEN
+    // Automatik verlassen, Auftrag wird noch fertig gemacht → blinken
+    IO_L1.Control_LED_White := fbBlinker.bOut;
+
+ELSE
+    // Kein Automatik, kein aktiver Auftrag → aus
+    IO_L1.Control_LED_White := FALSE;
+END_IF
+
+
 ]]></ST>
     </Implementation>
     <Method Name="M_AbholungFertig" Id="{d534390c-596d-410a-950e-73e20c0959ce}">

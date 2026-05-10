@@ -39,6 +39,7 @@ VAR_OUTPUT
 	MotorClose5 : BOOL;
 	MotorClose6 : BOOL;
 	Done : BOOL;
+	AllDoorsClosed : BOOL;
 END_VAR
 VAR
 	TuerzyklusStarten : BOOL;
@@ -51,277 +52,265 @@ VAR
 	ton5 : TON;
 	ton6 : TON;
 	Tueroffen : BOOL;
+	bCloseAllMode : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Default-Ausgänge immer zuerst zurücksetzen
-MotorOpen1 := FALSE;
-MotorClose1 := FALSE;
-MotorOpen2 := FALSE;
-MotorClose2 := FALSE;
-MotorOpen3 := FALSE;
-MotorClose3 := FALSE;
-MotorOpen4 := FALSE;
-MotorClose4 := FALSE;
-MotorOpen5 := FALSE;
-MotorClose5 := FALSE;
-MotorOpen6 := FALSE;
-MotorClose6 := FALSE;
-Done := FALSE;
-
-// Timer nur aktiv, wenn Tür wirklich offen UND im Offen-Warten-Schritt
-ton1(
-    IN := State = ENUM_Tuer.TuereAuf AND SensorOpen1,
-    PT := T#2S
-);
-
-ton2(
-    IN := State = ENUM_Tuer.TuereAuf AND SensorOpen2,
-    PT := T#2S
-);
-
-ton3(
-    IN := State = ENUM_Tuer.TuereAuf AND SensorOpen3,
-    PT := T#2S
-);
-
-ton4(
-    IN := State = ENUM_Tuer.TuereAuf AND SensorOpen4,
-    PT := T#2S
-);
-
-ton5(
-    IN := State = ENUM_Tuer.TuereAuf AND SensorOpen5,
-    PT := T#2S
-);
-
-ton6(
-    IN := State = ENUM_Tuer.TuereAuf AND SensorOpen6,
-    PT := T#2S
-);
-
-CASE State OF
-
-    ENUM_Tuer.TuereZu:
-
-        IF TuerzyklusStarten AND Stockwerk = 1 THEN
-            State := ENUM_Tuer.TuereOeffnen;
-        END_IF
-
-        IF TuerzyklusStarten AND Stockwerk = 2 THEN
-            State := ENUM_Tuer.TuereOeffnen;
-        END_IF
-
-        IF TuerzyklusStarten AND Stockwerk = 3 THEN
-            State := ENUM_Tuer.TuereOeffnen;
-        END_IF
-
-        IF TuerzyklusStarten AND Stockwerk = 4 THEN
-            State := ENUM_Tuer.TuereOeffnen;
-        END_IF
-
-        IF TuerzyklusStarten AND Stockwerk = 5 THEN
-            State := ENUM_Tuer.TuereOeffnen;
-        END_IF
-
-        IF TuerzyklusStarten AND Stockwerk = 6 THEN
-            State := ENUM_Tuer.TuereOeffnen;
-        END_IF
-
-
-    ENUM_Tuer.TuereOeffnen:
-		Tueroffen := TRUE;
-        IF Stockwerk = 1 THEN
-            IF NOT SensorOpen1 THEN
-                MotorOpen1 := TRUE;
-            ELSE
-                MotorOpen1 := FALSE;
-                State := ENUM_Tuer.TuereAuf;
-            END_IF
-        END_IF
-
-        IF Stockwerk = 2 THEN
-            IF NOT SensorOpen2 THEN
-                MotorOpen2 := TRUE;
-            ELSE
-                MotorOpen2 := FALSE;
-                State := ENUM_Tuer.TuereAuf;
-            END_IF
-        END_IF
-
-        IF Stockwerk = 3 THEN
-            IF NOT SensorOpen3 THEN
-                MotorOpen3 := TRUE;
-            ELSE
-                MotorOpen3 := FALSE;
-                State := ENUM_Tuer.TuereAuf;
-            END_IF
-        END_IF
-
-        IF Stockwerk = 4 THEN
-            IF NOT SensorOpen4 THEN
-                MotorOpen4 := TRUE;
-            ELSE
-                MotorOpen4 := FALSE;
-                State := ENUM_Tuer.TuereAuf;
-            END_IF
-        END_IF
-
-        IF Stockwerk = 5 THEN
-            IF NOT SensorOpen5 THEN
-                MotorOpen5 := TRUE;
-            ELSE
-                MotorOpen5 := FALSE;
-                State := ENUM_Tuer.TuereAuf;
-            END_IF
-        END_IF
-
-        IF Stockwerk = 6 THEN
-            IF NOT SensorOpen6 THEN
-                MotorOpen6 := TRUE;
-            ELSE
-                MotorOpen6 := FALSE;
-                State := ENUM_Tuer.TuereAuf;
-            END_IF
-        END_IF
-
-
-    ENUM_Tuer.TuereAuf:
-		Tueroffen := FALSE;
-        // 2 Sekunden offen warten
-        IF Stockwerk = 1 AND ton1.Q THEN
-            State := ENUM_Tuer.TuereSchliessen;
-        END_IF
-
-        IF Stockwerk = 2 AND ton2.Q THEN
-            State := ENUM_Tuer.TuereSchliessen;
-        END_IF
-
-        IF Stockwerk = 3 AND ton3.Q THEN
-            State := ENUM_Tuer.TuereSchliessen;
-        END_IF
-
-        IF Stockwerk = 4 AND ton4.Q THEN
-            State := ENUM_Tuer.TuereSchliessen;
-        END_IF
-
-        IF Stockwerk = 5 AND ton5.Q THEN
-            State := ENUM_Tuer.TuereSchliessen;
-        END_IF
-
-        IF Stockwerk = 6 AND ton6.Q THEN
-            State := ENUM_Tuer.TuereSchliessen;
-        END_IF
-
-
-    ENUM_Tuer.TuereSchliessen:
-
-        IF Stockwerk = 1 THEN
-            IF NOT Lichtschranke1 THEN
-                // Hindernis erkannt -> wieder öffnen
-                MotorClose1 := FALSE;
+      <ST><![CDATA[Done := FALSE;
+ton1(IN := State = ENUM_Tuer.TuereAuf AND SensorOpen1, PT := T#2S);
+ton2(IN := State = ENUM_Tuer.TuereAuf AND SensorOpen2, PT := T#2S);
+ton3(IN := State = ENUM_Tuer.TuereAuf AND SensorOpen3, PT := T#2S);
+ton4(IN := State = ENUM_Tuer.TuereAuf AND SensorOpen4, PT := T#2S);
+ton5(IN := State = ENUM_Tuer.TuereAuf AND SensorOpen5, PT := T#2S);
+ton6(IN := State = ENUM_Tuer.TuereAuf AND SensorOpen6, PT := T#2S);
+IF bCloseAllMode THEN
+    // Alle Türen schliessen – normaler State-Machine wird überbrückt
+    MotorOpen1 := FALSE;
+    IF NOT Lichtschranke1 THEN
+        MotorClose1 := FALSE;
+    ELSIF NOT SensorClosed1 THEN
+        MotorClose1 := TRUE;
+    ELSE
+        MotorClose1 := FALSE;
+    END_IF
+    MotorOpen2 := FALSE;
+    IF NOT Lichtschranke2 THEN
+        MotorClose2 := FALSE;
+    ELSIF NOT SensorClosed2 THEN
+        MotorClose2 := TRUE;
+    ELSE
+        MotorClose2 := FALSE;
+    END_IF
+    MotorOpen3 := FALSE;
+    IF NOT Lichtschranke3 THEN
+        MotorClose3 := FALSE;
+    ELSIF NOT SensorClosed3 THEN
+        MotorClose3 := TRUE;
+    ELSE
+        MotorClose3 := FALSE;
+    END_IF
+    MotorOpen4 := FALSE;
+    IF NOT Lichtschranke4 THEN
+        MotorClose4 := FALSE;
+    ELSIF NOT SensorClosed4 THEN
+        MotorClose4 := TRUE;
+    ELSE
+        MotorClose4 := FALSE;
+    END_IF
+    MotorOpen5 := FALSE;
+    IF NOT Lichtschranke5 THEN
+        MotorClose5 := FALSE;
+    ELSIF NOT SensorClosed5 THEN
+        MotorClose5 := TRUE;
+    ELSE
+        MotorClose5 := FALSE;
+    END_IF
+    MotorOpen6 := FALSE;
+    IF NOT Lichtschranke6 THEN
+        MotorClose6 := FALSE;
+    ELSIF NOT SensorClosed6 THEN
+        MotorClose6 := TRUE;
+    ELSE
+        MotorClose6 := FALSE;
+    END_IF
+    // Wenn alle zu: Modus beenden
+    IF SensorClosed1 AND SensorClosed2 AND SensorClosed3
+       AND SensorClosed4 AND SensorClosed5 AND SensorClosed6 THEN
+        bCloseAllMode := FALSE;
+        Done := TRUE;
+    END_IF
+ELSE
+    // Normaler Betrieb: Ausgänge zurücksetzen, dann State-Machine
+    MotorOpen1 := FALSE;
+    MotorClose1 := FALSE;
+    MotorOpen2 := FALSE;
+    MotorClose2 := FALSE;
+    MotorOpen3 := FALSE;
+    MotorClose3 := FALSE;
+    MotorOpen4 := FALSE;
+    MotorClose4 := FALSE;
+    MotorOpen5 := FALSE;
+    MotorClose5 := FALSE;
+    MotorOpen6 := FALSE;
+    MotorClose6 := FALSE;
+    CASE State OF
+        ENUM_Tuer.TuereZu:
+            IF TuerzyklusStarten AND Stockwerk = 1 THEN
                 State := ENUM_Tuer.TuereOeffnen;
-
-            ELSIF NOT SensorClosed1 THEN
-                MotorClose1 := TRUE;
-
-            ELSE
-                MotorClose1 := FALSE;
-                TuerzyklusStarten := FALSE;
-				Done := TRUE;
-                State := ENUM_Tuer.TuereZu;
             END_IF
-        END_IF
-
-        IF Stockwerk = 2 THEN
-            IF NOT Lichtschranke2 THEN
-                // Hindernis erkannt -> wieder öffnen
-                MotorClose2 := FALSE;
+            IF TuerzyklusStarten AND Stockwerk = 2 THEN
                 State := ENUM_Tuer.TuereOeffnen;
-
-            ELSIF NOT SensorClosed2 THEN
-                MotorClose2 := TRUE;
-
-            ELSE
-                MotorClose2 := FALSE;
-                TuerzyklusStarten := FALSE;
-				Done := TRUE;
-                State := ENUM_Tuer.TuereZu;
             END_IF
-        END_IF
-
-        IF Stockwerk = 3 THEN
-            IF NOT Lichtschranke3 THEN
-                // Hindernis erkannt -> wieder öffnen
-                MotorClose3 := FALSE;
+            IF TuerzyklusStarten AND Stockwerk = 3 THEN
                 State := ENUM_Tuer.TuereOeffnen;
-
-            ELSIF NOT SensorClosed3 THEN
-                MotorClose3 := TRUE;
-
-            ELSE
-                MotorClose3 := FALSE;
-                TuerzyklusStarten := FALSE;
-				Done := TRUE;
-                State := ENUM_Tuer.TuereZu;
             END_IF
-        END_IF
-
-        IF Stockwerk = 4 THEN
-            IF NOT Lichtschranke4 THEN
-                // Hindernis erkannt -> wieder öffnen
-                MotorClose4 := FALSE;
+            IF TuerzyklusStarten AND Stockwerk = 4 THEN
                 State := ENUM_Tuer.TuereOeffnen;
-
-            ELSIF NOT SensorClosed4 THEN
-                MotorClose4 := TRUE;
-
-            ELSE
-                MotorClose4 := FALSE;
-                TuerzyklusStarten := FALSE;
-				Done := TRUE;
-                State := ENUM_Tuer.TuereZu;
             END_IF
-        END_IF
-
-        IF Stockwerk = 5 THEN
-            IF NOT Lichtschranke5 THEN
-                // Hindernis erkannt -> wieder öffnen
-                MotorClose5 := FALSE;
+            IF TuerzyklusStarten AND Stockwerk = 5 THEN
                 State := ENUM_Tuer.TuereOeffnen;
-
-            ELSIF NOT SensorClosed5 THEN
-                MotorClose5 := TRUE;
-
-            ELSE
-                MotorClose5 := FALSE;
-                TuerzyklusStarten := FALSE;
-				Done := TRUE;
-                State := ENUM_Tuer.TuereZu;
             END_IF
-        END_IF
-
-        IF Stockwerk = 6 THEN
-            IF NOT Lichtschranke6 THEN
-                // Hindernis erkannt -> wieder öffnen
-                MotorClose6 := FALSE;
+            IF TuerzyklusStarten AND Stockwerk = 6 THEN
                 State := ENUM_Tuer.TuereOeffnen;
-
-            ELSIF NOT SensorClosed6 THEN
-                MotorClose6 := TRUE;
-
-            ELSE
-                MotorClose6 := FALSE;
-                TuerzyklusStarten := FALSE;
-				Done := TRUE;
-                State := ENUM_Tuer.TuereZu;
             END_IF
-        END_IF
+        ENUM_Tuer.TuereOeffnen:
+            Tueroffen := TRUE;
+            IF Stockwerk = 1 THEN
+                IF NOT SensorOpen1 THEN
+                    MotorOpen1 := TRUE;
+                ELSE
+                    MotorOpen1 := FALSE;
+                    State := ENUM_Tuer.TuereAuf;
+                END_IF
+            END_IF
+            IF Stockwerk = 2 THEN
+                IF NOT SensorOpen2 THEN
+                    MotorOpen2 := TRUE;
+                ELSE
+                    MotorOpen2 := FALSE;
+                    State := ENUM_Tuer.TuereAuf;
+                END_IF
+            END_IF
+            IF Stockwerk = 3 THEN
+                IF NOT SensorOpen3 THEN
+                    MotorOpen3 := TRUE;
+                ELSE
+                    MotorOpen3 := FALSE;
+                    State := ENUM_Tuer.TuereAuf;
+                END_IF
+            END_IF
+            IF Stockwerk = 4 THEN
+                IF NOT SensorOpen4 THEN
+                    MotorOpen4 := TRUE;
+                ELSE
+                    MotorOpen4 := FALSE;
+                    State := ENUM_Tuer.TuereAuf;
+                END_IF
+            END_IF
+            IF Stockwerk = 5 THEN
+                IF NOT SensorOpen5 THEN
+                    MotorOpen5 := TRUE;
+                ELSE
+                    MotorOpen5 := FALSE;
+                    State := ENUM_Tuer.TuereAuf;
+                END_IF
+            END_IF
+            IF Stockwerk = 6 THEN
+                IF NOT SensorOpen6 THEN
+                    MotorOpen6 := TRUE;
+                ELSE
+                    MotorOpen6 := FALSE;
+                    State := ENUM_Tuer.TuereAuf;
+                END_IF
+            END_IF
+        ENUM_Tuer.TuereAuf:
+            Tueroffen := FALSE;
+            IF Stockwerk = 1 AND ton1.Q THEN
+                State := ENUM_Tuer.TuereSchliessen;
+            END_IF
+            IF Stockwerk = 2 AND ton2.Q THEN
+                State := ENUM_Tuer.TuereSchliessen;
+            END_IF
+            IF Stockwerk = 3 AND ton3.Q THEN
+                State := ENUM_Tuer.TuereSchliessen;
+            END_IF
+            IF Stockwerk = 4 AND ton4.Q THEN
+                State := ENUM_Tuer.TuereSchliessen;
+            END_IF
+            IF Stockwerk = 5 AND ton5.Q THEN
+                State := ENUM_Tuer.TuereSchliessen;
+            END_IF
+            IF Stockwerk = 6 AND ton6.Q THEN
+                State := ENUM_Tuer.TuereSchliessen;
+            END_IF
+        ENUM_Tuer.TuereSchliessen:
+            IF Stockwerk = 1 THEN
+                IF NOT Lichtschranke1 THEN
+                    MotorClose1 := FALSE;
+                    State := ENUM_Tuer.TuereOeffnen;
+                ELSIF NOT SensorClosed1 THEN
+                    MotorClose1 := TRUE;
+                ELSE
+                    MotorClose1 := FALSE;
+                    TuerzyklusStarten := FALSE;
+                    Done := TRUE;
+                    State := ENUM_Tuer.TuereZu;
+                END_IF
+            END_IF
+            IF Stockwerk = 2 THEN
+                IF NOT Lichtschranke2 THEN
+                    MotorClose2 := FALSE;
+                    State := ENUM_Tuer.TuereOeffnen;
+                ELSIF NOT SensorClosed2 THEN
+                    MotorClose2 := TRUE;
+                ELSE
+                    MotorClose2 := FALSE;
+                    TuerzyklusStarten := FALSE;
+                    Done := TRUE;
+                    State := ENUM_Tuer.TuereZu;
+                END_IF
+            END_IF
+            IF Stockwerk = 3 THEN
+                IF NOT Lichtschranke3 THEN
+                    MotorClose3 := FALSE;
+                    State := ENUM_Tuer.TuereOeffnen;
+                ELSIF NOT SensorClosed3 THEN
+                    MotorClose3 := TRUE;
+                ELSE
+                    MotorClose3 := FALSE;
+                    TuerzyklusStarten := FALSE;
+                    Done := TRUE;
+                    State := ENUM_Tuer.TuereZu;
+                END_IF
+            END_IF
+            IF Stockwerk = 4 THEN
+                IF NOT Lichtschranke4 THEN
+                    MotorClose4 := FALSE;
+                    State := ENUM_Tuer.TuereOeffnen;
+                ELSIF NOT SensorClosed4 THEN
+                    MotorClose4 := TRUE;
+                ELSE
+                    MotorClose4 := FALSE;
+                    TuerzyklusStarten := FALSE;
+                    Done := TRUE;
+                    State := ENUM_Tuer.TuereZu;
+                END_IF
+            END_IF
+            IF Stockwerk = 5 THEN
+                IF NOT Lichtschranke5 THEN
+                    MotorClose5 := FALSE;
+                    State := ENUM_Tuer.TuereOeffnen;
+                ELSIF NOT SensorClosed5 THEN
+                    MotorClose5 := TRUE;
+                ELSE
+                    MotorClose5 := FALSE;
+                    TuerzyklusStarten := FALSE;
+                    Done := TRUE;
+                    State := ENUM_Tuer.TuereZu;
+                END_IF
+            END_IF
+            IF Stockwerk = 6 THEN
+                IF NOT Lichtschranke6 THEN
+                    MotorClose6 := FALSE;
+                    State := ENUM_Tuer.TuereOeffnen;
+                ELSIF NOT SensorClosed6 THEN
+                    MotorClose6 := TRUE;
+                ELSE
+                    MotorClose6 := FALSE;
+                    TuerzyklusStarten := FALSE;
+                    Done := TRUE;
+                    State := ENUM_Tuer.TuereZu;
+                END_IF
+            END_IF
+        ENUM_Tuer.Error:
+    END_CASE
+END_IF
 
-
-    ENUM_Tuer.Error:
-
-END_CASE]]></ST>
+IF IO_L1.Door_1_SensorClosed AND IO_L1.Door_2_SensorClosed AND IO_L1.Door_3_SensorClosed AND IO_L1.Door_4_SensorClosed AND IO_L1.Door_5_SensorClosed AND IO_L1.Door_6_SensorClosed THEN
+	AllDoorsClosed := TRUE;
+ELSE
+	AllDoorsClosed := FALSE;
+END_IF]]></ST>
     </Implementation>
     <Method Name="M_AreDoorsClosed" Id="{b26a9bf4-2fc3-4358-ace3-7830ae6fabe9}">
       <Declaration><![CDATA[METHOD PUBLIC M_AreDoorsClosed : BOOL
@@ -350,92 +339,11 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-            IF NOT Lichtschranke1 THEN
-                // Hindernis erkannt -> wieder öffnen
-                MotorClose1 := FALSE;
-         
+bCloseAllMode := TRUE;
 
-            ELSIF NOT SensorClosed1 THEN
-                MotorClose1 := TRUE;
-				Tuer1zu := FALSE;
-            ELSE
-                MotorClose1 := FALSE;
-                Tuer1zu := TRUE;
-            END_IF
-       
-
-
-            IF NOT Lichtschranke2 THEN
-                // Hindernis erkannt -> wieder öffnen
-                MotorClose2 := FALSE;
-            ELSIF NOT SensorClosed2 THEN
-                MotorClose2 := TRUE;
-				Tuer2zu := FALSE;
-            ELSE
-                MotorClose2 := FALSE;
-               	Tuer2zu := TRUE;
-            END_IF
-       
-
-  
-            IF NOT Lichtschranke3 THEN
-                // Hindernis erkannt -> wieder öffnen
-                MotorClose3 := FALSE;
-           ELSIF NOT SensorClosed3 THEN
-                MotorClose3 := TRUE;
-				Tuer3zu := FALSE;
-            ELSE
-                MotorClose3 := FALSE;
-               	Tuer3zu := TRUE;
-            END_IF
-      
-
-    
-            IF NOT Lichtschranke4 THEN
-                // Hindernis erkannt -> wieder öffnen
-                MotorClose4 := FALSE;
-              
-            ELSIF NOT SensorClosed4 THEN
-                MotorClose4 := TRUE;
-				Tuer4zu := FALSE;
-            ELSE
-                MotorClose4 := FALSE;
-                Tuer4zu := TRUE;
-            END_IF
-
-       
-            IF NOT Lichtschranke5 THEN
-                // Hindernis erkannt -> wieder öffnen
-
-            ELSIF NOT SensorClosed5 THEN
-                MotorClose5 := TRUE;
-				Tuer5zu := FALSE;
-            ELSE
-                MotorClose5 := FALSE;
-				Tuer5zu := TRUE;
-            END_IF
-
-
-  
-            IF NOT Lichtschranke6 THEN
-                // Hindernis erkannt -> wieder öffnen
-                MotorClose6 := FALSE;
-              	Tuer6zu := FALSE;
-            ELSIF NOT SensorClosed6 THEN
-                MotorClose6 := TRUE;
-
-            ELSE
-                MotorClose6 := FALSE;
-                Tuer6zu := TRUE;
-            END_IF
-      
-		IF Tuer1zu AND Tuer2zu AND Tuer3zu AND Tuer4zu AND Tuer5zu AND Tuer6zu THEN
-		  	M_closeAllDoors := TRUE;
-		ELSE 
-			M_closeAllDoors := FALSE;
-		END_IF
-		
-	]]></ST>
+M_closeAllDoors :=
+    SensorClosed1 AND SensorClosed2 AND SensorClosed3 AND
+    SensorClosed4 AND SensorClosed5 AND SensorClosed6;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_DoorOpen" Id="{a81e80dc-9065-490b-b6a8-8ed585863b63}">

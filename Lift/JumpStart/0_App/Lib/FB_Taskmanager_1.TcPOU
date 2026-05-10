@@ -30,7 +30,7 @@ END_IF
 Case State Of
 	
 00: //Warten
-IF StartLogik THEN
+IF StartLogik AND IO_L1.Control_Automatic THEN
 	StartLogik := FALSE;
 	State := 10;
 END_IF

@@ -56,7 +56,7 @@ END_VAR
 
 fbTaskmanager(
     fbFahrleitsystem := fbFahrleitsystem,
-    fbFahrlogik := fbFahrlogikShortestDistance
+    fbFahrlogik := fbFahrlogikFIFO
 );
 
 fbFahrleitsystem();
