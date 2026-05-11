@@ -34,7 +34,7 @@ END_VAR]]></Declaration>
 FOR i := 1 TO UPPER_BOUND(Auftraege, 1) DO
 	
 IF Auftraege[i].istAktiv THEN
-	Distance := ABS(Auftraege[i].Startstockwerk - OrderID_Counter.AktuellesStockwerk);
+	Distance := ABS(Auftraege[i].Startstockwerk - Divers.AktuellesStockwerk);
 	
 	IF Distance < shortestDistance THEN
 		shortestDistance := Distance;

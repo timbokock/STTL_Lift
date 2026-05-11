@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="Visu_Manuellmodus" Id="{0e019312-7e1f-4b5f-ae15-8446514658ee}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	AktuellePosmm : LREAL;
+	JogAuf : BOOL;
+	JogAb : BOOL;
+	Zielstock : INT;
+	PosAnfahren : BOOL;
+	ReferenzStart : BOOL;
+	bTuerAuf : ARRAY[1..6] OF BOOL;
+	bTuerZu : ARRAY[1..6] OF BOOL;
+	AlleTuerenZu : BOOL;
+	AlleTuerenAuf : BOOL;
+	adwFloorBtnColor : ARRAY[1..6] OF DWORD;
+
+	adwTuerAufColor : ARRAY[1..6] OF DWORD;
+	adwTuerZuColor  : ARRAY[1..6] OF DWORD;
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

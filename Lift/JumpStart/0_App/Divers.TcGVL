@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="Divers" Id="{2fe0a1d8-72a4-4413-84d3-4a8cd0c3527c}">
+    <Declaration><![CDATA[
+VAR_GLOBAL
+	NextfreeOrderID : INT;
+	AktuellesStockwerk : INT;
+	AktuellePosmm : LREAL;
+	AutomatikmodusAktiv : BOOL;
+	ManuellmodusAktiv : BOOL;
+	AlleTuerenZu : BOOL;
+	AchseSicher : BOOL;
+	Fehler : ST_Error;
+	Fehlertext : STRING(500);
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -39,7 +39,7 @@ END_IF
 
 10: //Nächste Task von der Fahrlogik geben lassen
 NextTask := fbFahrlogik.M_getNextTask(
-OrderID_Counter.AktuellesStockwerk, Auftraege);
+Divers.AktuellesStockwerk, Auftraege);
 
 IF NextTask.Auftragsnummer > 0 THEN
 	State := 20;
@@ -125,8 +125,8 @@ FOR i:=1 TO 10 DO
 		Auftraege[i].Startstockwerk := Start;
 		Auftraege[i].Zielstockwerk := Ziel;
 		
-		OrderID_counter.NextfreeOrderID := OrderID_counter.NextfreeOrderID + 1;
-		Auftraege[i].Auftragsnummer := OrderID_counter.NextfreeOrderID;
+		Divers.NextfreeOrderID := Divers.NextfreeOrderID + 1;
+		Auftraege[i].Auftragsnummer := Divers.NextfreeOrderID;
 		
 		Auftraege[i].istAktiv := TRUE;
 		StartLogik := TRUE;

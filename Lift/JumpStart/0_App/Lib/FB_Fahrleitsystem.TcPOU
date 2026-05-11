@@ -30,6 +30,9 @@ VAR
 	AufstartenFreigabe : BOOL;
 	AllDoorsClosed : BOOL;
 	fbBlinker : FB_Blinker;
+	FehlerQuittierenFlanke : R_TRIG;   // NEU — Flanke für Quittierung
+ 	sFehlertext : STRING(500);  // lokale Hilfsvariable
+    i_txt       : INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -69,7 +72,8 @@ fbTuer(
     MotorClose4 => IO_L1.Door_4_MotorClose,
     MotorClose5 => IO_L1.Door_5_MotorClose,
     MotorClose6 => IO_L1.Door_6_MotorClose,
-	AllDoorsClosed => AllDoorsClosed
+	AllDoorsClosed => AllDoorsClosed,
+	FehlerQuittieren := IO_L1.Control_Reset
 );
 
 fbBlinker(bEnable:= TRUE, tOn:= T#500MS, tOff:=T#500MS , bOut=> );
@@ -85,13 +89,15 @@ CASE State OF
 			Busy := TRUE;
 			State := ENUM_Fahrsystem.Aufstartablauf;
 		END_IF
-		IF Start AND IO_L1.Control_Automatic THEN
+		IF Start AND Divers.AutomatikmodusAktiv THEN
 			Busy := TRUE;
 			Start := FALSE;
 			State := ENUM_Fahrsystem.Sicherheitscheck;
 		END_IF
-		
-		
+ 		IF Visu_Manuellmodus.PosAnfahren AND Divers.ManuellmodusAktiv THEN
+			ZielStockwerk := Visu_Manuellmodus.Zielstock;
+ 			State := ENUM_Fahrsystem.ZumZielStockwerk; 
+		END_IF
 	ENUM_Fahrsystem.Sicherheitscheck:
 		//IF fbTuer.M_AreDoorsClosed() AND NOT fbAchse.M_isBusy() AND NOT fbAchse.M_hasError() THEN
 			SicherheitsCheckbestanden := TRUE;
@@ -144,7 +150,12 @@ CASE State OF
 			//OrderID_Counter.AktuellesStockwerk := ZielStockwerk;
 			AktuellesStockwerk := ZielStockwerk;
 			AmZielStockwerk := TRUE;
-			State := ENUM_Fahrsystem.Tueren;
+			IF Divers.AutomatikmodusAktiv THEN
+				State := ENUM_Fahrsystem.Tueren;
+			ELSE
+				State := ENUM_Fahrsystem.Warten;	
+			END_IF
+			
 		END_IF
 	
 	ENUM_Fahrsystem.Aufstartablauf: 
@@ -172,6 +183,9 @@ CASE State OF
 		END_IF
 		
 END_CASE
+
+
+//LED Stuerung
 IF IO_L1.Control_Automatic AND AufstartenAbgeschlossen THEN
     // Anlage läuft (mit oder ohne Auftrag) → dauernd an
     IO_L1.Control_LED_White := TRUE;
@@ -188,8 +202,104 @@ ELSE
     // Kein Automatik, kein aktiver Auftrag → aus
     IO_L1.Control_LED_White := FALSE;
 END_IF
+// ── Fehler sammeln ────────────────────────────────────────────────────────────
+Divers.Fehler.AchsePower := fbAchse.fbPower.Error;
+Divers.Fehler.AchseHome  := fbAchse.fbHome.Error;
+Divers.Fehler.AchseMove  := fbAchse.fbMoveAbs.Error;
+Divers.Fehler.AchseJog   := fbAchse.fbJog.Error;
+Divers.Fehler.NotAus     := IO_L1.Control_EmergencyStopActive;
+Divers.Fehler.TuerTimeout := fbTuer.TuerFehler;
 
+// Letzten Achsen-Fehlercode speichern
+IF fbAchse.fbPower.Error   THEN Divers.Fehler.AchseFehlercode := fbAchse.FehlercodePower; END_IF
+IF fbAchse.fbHome.Error    THEN Divers.Fehler.AchseFehlercode := fbAchse.FehlercodeRef;   END_IF
+IF fbAchse.fbMoveAbs.Error THEN Divers.Fehler.AchseFehlercode := fbAchse.FehlercodeMove;  END_IF
 
+// Zusammenfassung
+Divers.Fehler.IrgendeinFehler :=
+    Divers.Fehler.AchsePower OR
+    Divers.Fehler.AchseHome  OR
+    Divers.Fehler.AchseMove  OR
+    Divers.Fehler.AchseJog   OR
+    Divers.Fehler.NotAus     OR
+    Divers.Fehler.TuerTimeout[1] OR Divers.Fehler.TuerTimeout[2] OR
+    Divers.Fehler.TuerTimeout[3] OR Divers.Fehler.TuerTimeout[4] OR
+    Divers.Fehler.TuerTimeout[5] OR Divers.Fehler.TuerTimeout[6];
+
+Divers.Fehler.IrgendEineWarnung := IO_L1.Control_Overload;
+
+// ── Quittierung ───────────────────────────────────────────────────────────────
+FehlerQuittierenFlanke(CLK := IO_L1.Control_Reset);
+IF FehlerQuittierenFlanke.Q AND NOT Divers.Fehler.IrgendeinFehler THEN
+    Divers.Fehler.FehlerQuittiert := TRUE;
+END_IF
+IF Divers.Fehler.IrgendeinFehler THEN
+    Divers.Fehler.FehlerQuittiert := FALSE;  // Reset bei neuem Fehler
+END_IF
+
+// ── LED Steuerung Rot / Blau / Gelb ──────────────────────────────────────────
+IF Divers.Fehler.IrgendeinFehler THEN
+    IO_L1.Control_LED_Red := TRUE;
+    IF Divers.Fehler.FehlerQuittiert THEN
+        IO_L1.Control_LED_Blue := fbBlinker.bOut;  // blinkt = quittierbar
+    ELSE
+        IO_L1.Control_LED_Blue := TRUE;             // dauernd = noch aktiv
+    END_IF
+ELSE
+    IO_L1.Control_LED_Red  := FALSE;
+    IO_L1.Control_LED_Blue := FALSE;
+END_IF
+
+IO_L1.Control_LED_Yellow := Divers.Fehler.IrgendEineWarnung;
+// ─────────────────────────────────────────────────────────────────────────────
+// ── Fehlertext aufbauen ───────────────────────────────────────────────────────
+sFehlertext := '';
+
+// Achse
+IF Divers.Fehler.AchsePower THEN
+    sFehlertext := CONCAT(sFehlertext, 'FEHLER: Achse Power');
+    sFehlertext := CONCAT(sFehlertext, CONCAT(' (Code: ', CONCAT(UDINT_TO_STRING(Divers.Fehler.AchseFehlercode), ') | ')));
+END_IF
+IF Divers.Fehler.AchseHome THEN
+    sFehlertext := CONCAT(sFehlertext, 'FEHLER: Referenzfahrt');
+    sFehlertext := CONCAT(sFehlertext, CONCAT(' (Code: ', CONCAT(UDINT_TO_STRING(Divers.Fehler.AchseFehlercode), ') | ')));
+END_IF
+IF Divers.Fehler.AchseMove THEN
+    sFehlertext := CONCAT(sFehlertext, 'FEHLER: Positionierung');
+    sFehlertext := CONCAT(sFehlertext, CONCAT(' (Code: ', CONCAT(UDINT_TO_STRING(Divers.Fehler.AchseFehlercode), ') | ')));
+END_IF
+IF Divers.Fehler.AchseJog THEN
+    sFehlertext := CONCAT(sFehlertext, 'FEHLER: Jog | ');
+END_IF
+
+// Türen
+FOR i_txt := 1 TO 6 DO
+    IF Divers.Fehler.TuerTimeout[i_txt] THEN
+        sFehlertext := CONCAT(sFehlertext, 'FEHLER: Tuer Timeout Stock. ');
+        sFehlertext := CONCAT(sFehlertext, CONCAT(INT_TO_STRING(i_txt), ' | '));
+    END_IF
+END_FOR
+
+// Allgemein
+IF Divers.Fehler.NotAus THEN
+    sFehlertext := CONCAT(sFehlertext, 'FEHLER: Not-Aus | ');
+END_IF
+IF Divers.Fehler.Brandalarm THEN
+    sFehlertext := CONCAT(sFehlertext, 'FEHLER: Brandalarm | ');
+END_IF
+
+// Warnung
+IF Divers.Fehler.IrgendEineWarnung THEN
+    sFehlertext := CONCAT(sFehlertext, 'WARNUNG: Ueberlast Kabine | ');
+END_IF
+
+// Kein Fehler
+IF sFehlertext = '' THEN
+    sFehlertext := 'Keine Fehler';
+END_IF
+
+Divers.Fehlertext := sFehlertext;
+// ─────────────────────────────────────────────────────────────────────────────
 ]]></ST>
     </Implementation>
     <Method Name="M_AbholungFertig" Id="{d534390c-596d-410a-950e-73e20c0959ce}">

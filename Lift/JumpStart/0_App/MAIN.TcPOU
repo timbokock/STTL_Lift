@@ -13,6 +13,8 @@ VAR
 	fbFahrlogikShortestDistance : FB_Logik_ShortestDistance;
 	fbPanel : FB_Panel ;
 	LED_Loeschen_verstanden : BOOL;
+	AutomatikmodusAktiv : BOOL;
+	ManuellmodusAktiv : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -61,12 +63,21 @@ fbTaskmanager(
 
 fbFahrleitsystem();
 
+IF NOT fbFahrleitsystem.M_isBusy() AND IO_L1.Control_Manual THEN
+	Divers.ManuellmodusAktiv := TRUE;
+	Divers.AutomatikmodusAktiv := FALSE;
+END_IF
+IF IO_L1.Control_Automatic THEN
+	Divers.AutomatikmodusAktiv := TRUE;
+	Divers.ManuellmodusAktiv := FALSE;
+END_IF
 
 //LED Löschen
 IF fbFahrleitsystem.M_AbholungFertig() > (-1) THEN
 	LED_Loeschen_verstanden := fbPanel.M_TurnofLED(fbFahrleitsystem.M_AbholungFertig());
 END_IF
 
+fbManuell();
 
 ]]></ST>
     </Implementation>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_Error" Id="{8bcb4a6f-a34d-4ee3-9477-6a941ab80080}">
+    <Declaration><![CDATA[TYPE ST_Error :
+STRUCT
+    // Achse
+    AchsePower      : BOOL;
+    AchseHome       : BOOL;
+    AchseMove       : BOOL;
+    AchseJog        : BOOL;
+    AchseFehlercode : UDINT;
+
+    // Türen
+    TuerTimeout     : ARRAY[1..6] OF BOOL;
+
+    // Allgemein
+    NotAus          : BOOL;
+    Brandalarm      : BOOL;
+
+    // Zusammengefasst — wird automatisch berechnet
+    IrgendeinFehler : BOOL;
+    IrgendEineWarnung : BOOL;
+    FehlerQuittiert : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

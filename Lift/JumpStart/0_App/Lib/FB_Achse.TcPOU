@@ -32,6 +32,8 @@ VAR
     fbMoveAbs  : MC_MoveAbsolute;
     fbStop     : MC_Stop;
     fbReset    : MC_Reset;
+	fbJog   : MC_Jog;
+	fbReadPos : MC_ReadActualPosition;
 	AchseReferenzieren : BOOL;
 	s_Zielstock : INT;
 
@@ -46,7 +48,18 @@ END_VAR]]></Declaration>
 		Enable_Positive:= TRUE, 
 		Enable_Negative:= TRUE,  
 		ErrorID => FehlercodePower);
+fbReadPos(
+    Axis    := Achse,
+    Enable  := TRUE,
+    Position => Divers.AktuellePosmm  // ← schreibt jeden Zyklus die Position in mm
+);
 		
+fbJog(
+    Axis         := Achse,
+    JogForward   := Visu_Manuellmodus.JogAuf AND Divers.ManuellmodusAktiv AND fbPower.Status,
+    JogBackwards := Visu_Manuellmodus.JogAb  AND Divers.ManuellmodusAktiv AND fbPower.Status,
+    Velocity     := 100.0   // mm/s – anpassen nach Bedarf
+);
 IF Simulation THEN
 		Zielposition := S_Zielposition;
 	END_IF
@@ -54,8 +67,9 @@ IF Simulation THEN
 CASE State OF
 		ENUM_Achse.Warten: // Achse nicht eingeschalten 
 		Error := FALSE;
-		
+		Divers.AchseSicher := TRUE;
 		IF Start AND NOT fbPower.Status THEN
+			Divers.AchseSicher := FALSE;
 			Start := FALSE;
 			Done := FALSE;
 			Busy := TRUE;
@@ -63,6 +77,7 @@ CASE State OF
 			State := ENUM_Achse.PowerOn;
 		END_IF
 		IF Start AND fbPower.Status THEN
+			Divers.AchseSicher := FALSE;
 			Start := FALSE;
 			Done := FALSE;
 			Busy := TRUE;
@@ -77,6 +92,7 @@ CASE State OF
 			State := ENUM_Achse.Referenzieren;
 		END_IF
 		IF AchseReferenzieren AND NOT fbPower.Status THEN //Falls Fahrsystem Referenzierung durchführen will
+			Divers.AchseSicher := FALSE;
 			AchseReferenzieren := FALSE;
 			Done := FALSE;
 			Busy := TRUE;
@@ -137,7 +153,7 @@ CASE State OF
 			 
 		MoveAbsExecute := FALSE;
 		IF fbMoveAbs.Done THEN
-			OrderID_Counter.AktuellesStockwerk := s_Zielstock;
+			Divers.AktuellesStockwerk := s_Zielstock;
 			Done := TRUE;
 			Busy := FALSE;
 			State := ENUM_Achse.Warten;
@@ -168,13 +184,7 @@ CASE State OF
 		END_IF
 END_CASE
 
-IF Error THEN
-	IO_L1.Control_LED_Red := TRUE;
-	IO_L1.Control_LED_Blue := TRUE;
-ELSE 
-	IO_L1.Control_LED_Red := FALSE;
-	IO_L1.Control_LED_Blue := FALSE;
-END_IF]]></ST>
+]]></ST>
     </Implementation>
     <Method Name="M_AufstartenAbgeschlossen" Id="{7259ea19-6758-4e93-9988-a9891ee5a107}">
       <Declaration><![CDATA[METHOD PUBLIC M_AufstartenAbgeschlossen : BOOL

@@ -53,6 +53,9 @@
     <Compile Include="0_App\Lib\Diverses\ITF_Fahrlogik.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="0_App\Lib\Diverses\ST_Error.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="0_App\Lib\Diverses\ST_Fahrauftrag.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -80,7 +83,7 @@
     <Compile Include="0_App\Lib\FC_GetFloorPosition.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="0_App\OrderID_Counter.TcGVL">
+    <Compile Include="0_App\Divers.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -116,6 +119,10 @@
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
+    <Compile Include="7_Visu\Handbetrieb.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
     <Compile Include="7_Visu\Visu_Liftkabine.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -123,6 +130,10 @@
     <Compile Include="7_Visu\Visu_Liftkabine.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="7_Visu\Visu_Manuellmodus.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="9_Modell\Lib\FB_MotionAxisPassive.TcPOU">
       <SubType>Code</SubType>
@@ -246,6 +257,10 @@
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
       <SystemLibrary>true</SystemLibrary>
+    </PlaceholderReference>
+    <PlaceholderReference Include="VisuDialogs">
+      <DefaultResolution>VisuDialogs, * (System)</DefaultResolution>
+      <Namespace>VisuDialogs</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
